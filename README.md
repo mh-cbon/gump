@@ -9,7 +9,7 @@ mkdir -p $GOPATH/github.com/mh-cbon
 cd $GOPATH/github.com/mh-cbon
 git clone https://github.com/mh-cbon/gump.git
 glide install
-go install gump.go
+go install
 ```
 
 ## Usage
