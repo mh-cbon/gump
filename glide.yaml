@@ -1,7 +1,7 @@
 package: github.com/mh-cbon/gump
 scripts:
-  preversion: echo "hello"
-  postversion: echo "goodbye"
+  preversion: git fetch --tags
+  postversion: git push && git push --tags
 import:
 - package: github.com/mh-cbon/go-repo-utils
 - package: github.com/docopt/docopt.go

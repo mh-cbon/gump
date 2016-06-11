@@ -52,11 +52,17 @@ Options:
 
   vcs, err := repoutils.WhichVcs(path)
   if err!=nil {
-    fmt.Println(err)
-    os.Exit(1)
+    exitWithError(err)
   }
   if vcs=="svn" {
     exitWithError(errors.New("Sorry ! Subversion is not supported !"))
+  }
+  ok, err := repoutils.IsClean(vcs, path)
+  if ok==false {
+    exitWithError(errors.New("Your local copy contains uncommited changes!"))
+  }
+  if err!=nil {
+    exitWithError(err)
   }
 
   hasConfig := config.Exists(path)
