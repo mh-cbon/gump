@@ -2,7 +2,7 @@
 
 Bin util to bump your package using semver
 
-# Install
+## Install
 
 ```sh
 mkdir -p $GOPATH/github.com/mh-cbon
@@ -12,7 +12,7 @@ glide install
 go install gump.go
 ```
 
-# Usage
+## Usage
 
 ```sh
 Gump - Bump your package
@@ -33,7 +33,7 @@ Options:
   -a --alpha            Update last alpha version.
 ```
 
-# Pre/Post version scripts
+## Pre/Post version scripts
 
 Gump can detect, parse and execute pre/post version scripts.
 
@@ -50,7 +50,7 @@ Drop a file named `.version` on your root such
 preversion: git fetch --tags
 postversion: git push && git push --tags \
 # multiline works too
-echo "and also with comments in the middle"
+&& echo "and also with comments in the middle"
 ```
 
 #### Using a glide.yaml file
@@ -63,6 +63,6 @@ scripts:
   postversion: echo "goodbye"
 ```
 
-# todo
+## todo
 
 - at some point, probably, move to https://github.com/Masterminds/vcs
