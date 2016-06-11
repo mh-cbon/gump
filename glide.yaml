@@ -1,6 +1,6 @@
 package: github.com/mh-cbon/gump
 scripts:
-  preversion: git fetch --tags
+  preversion: git fetch --tags && go vet && go fmt
   postversion: git push && git push --tags
 import:
 - package: github.com/mh-cbon/go-repo-utils
