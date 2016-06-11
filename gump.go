@@ -35,7 +35,7 @@ Options:
   -a --alpha            Update last alpha version.
 `
 
-	arguments, err := docopt.Parse(usage, nil, true, "Gump", false)
+	arguments, err := docopt.Parse(usage, nil, true, "Gump 0.0.4", false)
 
 	logger.Println(arguments)
 	if err != nil {
