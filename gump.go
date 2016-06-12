@@ -57,13 +57,6 @@ Options:
 	if vcs == "svn" {
 		exitWithError(errors.New("Sorry ! Subversion is not supported !"))
 	}
-	ok, err := repoutils.IsClean(vcs, path)
-	if ok == false {
-		exitWithError(errors.New("Your local copy contains uncommited changes!"))
-	}
-	if err != nil {
-		exitWithError(err)
-	}
 
 	hasConfig := config.Exists(path)
 	conf, err := config.Load(path)
@@ -102,6 +95,13 @@ Options:
 		}
 
 		if isDry == false {
+			ok, err := repoutils.IsClean(vcs, path)
+			if ok == false {
+				exitWithError(errors.New("Your local copy contains uncommited changes!"))
+			}
+			if err != nil {
+				exitWithError(err)
+			}
 			ok, out, err := repoutils.CreateTag(vcs, path, newVersion)
 			logger.Printf("ok=%t\n", ok)
 			if err != nil {

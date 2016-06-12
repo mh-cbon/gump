@@ -1,8 +1,8 @@
 package config
 
 import (
-  "io/ioutil"
-  "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 // Config is the top-level configuration object.
@@ -11,26 +11,26 @@ type GlideConfig struct {
 }
 
 type Script struct {
-	PreVersion   string   `yaml:"preversion"`
-	PostVersion  string   `yaml:"postversion"`
+	PreVersion  string `yaml:"preversion"`
+	PostVersion string `yaml:"postversion"`
 }
 
-func (g *GlideConfig) Load (path string) error {
-  data, err := ioutil.ReadFile(path)
-  if err!=nil {
-    return err
-  }
+func (g *GlideConfig) Load(path string) error {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
 	return g.Parse(data)
 }
 
-func (g *GlideConfig) Parse (data []byte) error {
+func (g *GlideConfig) Parse(data []byte) error {
 	return yaml.Unmarshal(data, &g)
 }
 
-func (g *GlideConfig) GetPreVersion () string {
-  return g.Scripts.PreVersion
+func (g *GlideConfig) GetPreVersion() string {
+	return g.Scripts.PreVersion
 }
 
-func (g *GlideConfig) GetPostVersion () string {
-  return g.Scripts.PostVersion
+func (g *GlideConfig) GetPostVersion() string {
+	return g.Scripts.PostVersion
 }
