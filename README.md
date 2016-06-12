@@ -8,6 +8,7 @@ Bin util to bump your package using semver
 mkdir -p $GOPATH/github.com/mh-cbon
 cd $GOPATH/github.com/mh-cbon
 git clone https://github.com/mh-cbon/gump.git
+cd gump
 glide install
 go install
 ```
@@ -47,7 +48,7 @@ Drop a file named `.version` on your root such
 
 ```sh
 # demo of .version file
-preversion: git fetch --tags
+preversion: git fetch --tags && philea "go vet %s" "go fmt %s"
 postversion: git push && git push --tags \
 # multiline works too
 && echo "and also with comments in the middle"
