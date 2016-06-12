@@ -1,5 +1,5 @@
-hash: b90b81542a963164d9f12737b0c1a36d36b3e0c27ddfed52e2568f17ffb5cd01
-updated: 2016-06-11T09:43:22.276177169+02:00
+hash: 03b9f926cac726205aafa1141b59d1735d35ef8393849b0bce34290aed170a6b
+updated: 2016-06-12T16:55:14.187853396+02:00
 imports:
 - name: github.com/docopt/docopt.go
   version: 784ddc588536785e7299f7272f39101f7faccc3f
@@ -16,7 +16,7 @@ imports:
   version: 56b76bdf51f7708750eac80fa38b952bb9f32639
   repo: https://github.com/mattn/go-isatty
 - name: github.com/mh-cbon/go-repo-utils
-  version: 5e786a8da8eb89e24218fd65be73f4862cb43496
+  version: 2025721709f00bac7b69dbb3f4e8b30eaf25ca0b
   subpackages:
   - repoutils
   - bzr
@@ -24,7 +24,7 @@ imports:
   - hg
   - svn
 - name: github.com/mh-cbon/semver
-  version: f6ec8aebd39af305c6ddc0a78b7fb72afe9f78aa
+  version: 2f7cec05572f725cc5f17efee5bea1672bf60d7c
 - name: github.com/mh-cbon/verbose
   version: c8f315468e581eb736cc1f4f79e785a60ea370e6
   subpackages:

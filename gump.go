@@ -1,23 +1,23 @@
 package main
 
 import (
-  "errors"
-  "fmt"
-  "os"
-  "log"
+	"errors"
+	"fmt"
+	"log"
+	"os"
 
-  "github.com/docopt/docopt.go"
-  "github.com/mh-cbon/verbose"
-  "github.com/mh-cbon/go-repo-utils/repoutils"
-  "github.com/mh-cbon/gump/gump"
-  "github.com/mh-cbon/gump/config"
+	"github.com/docopt/docopt.go"
+	"github.com/mh-cbon/go-repo-utils/repoutils"
+	"github.com/mh-cbon/gump/config"
+	"github.com/mh-cbon/gump/gump"
+	"github.com/mh-cbon/verbose"
 )
 
 var logger = verbose.Auto()
 
-func main () {
+func main() {
 
-usage := `Gump - Bump your package
+	usage := `Gump - Bump your package
 
 Usage:
   gump prerelease [-b|--beta] [-a|--alpha] [-d|--dry]
@@ -39,99 +39,100 @@ Options:
 
 	logger.Println(arguments)
 	if err != nil {
-    exitWithError(err)
+		exitWithError(err)
 	}
 
-  isDry := isDry(arguments)
+	isDry := isDry(arguments)
 
-  path, err := os.Getwd()
+	path, err := os.Getwd()
 	logger.Println("path=" + path)
-  if err != nil {
-    exitWithError(err)
-  }
+	if err != nil {
+		exitWithError(err)
+	}
 
-  vcs, err := repoutils.WhichVcs(path)
-  if err!=nil {
-    exitWithError(err)
-  }
-  if vcs=="svn" {
-    exitWithError(errors.New("Sorry ! Subversion is not supported !"))
-  }
-  ok, err := repoutils.IsClean(vcs, path)
-  if ok==false {
-    exitWithError(errors.New("Your local copy contains uncommited changes!"))
-  }
-  if err!=nil {
-    exitWithError(err)
-  }
+	vcs, err := repoutils.WhichVcs(path)
+	if err != nil {
+		exitWithError(err)
+	}
+	if vcs == "svn" {
+		exitWithError(errors.New("Sorry ! Subversion is not supported !"))
+	}
+	ok, err := repoutils.IsClean(vcs, path)
+	if ok == false {
+		exitWithError(errors.New("Your local copy contains uncommited changes!"))
+	}
+	if err != nil {
+		exitWithError(err)
+	}
 
-  hasConfig := config.Exists(path)
-  conf, err := config.Load(path)
-  if hasConfig && err!=nil {
-    exitWithError(err)
-  }
+	hasConfig := config.Exists(path)
+	conf, err := config.Load(path)
+	if hasConfig && err != nil {
+		exitWithError(err)
+	}
 
 	cmd := getCommand(arguments)
 	logger.Println("cmd=" + cmd)
 
 	if cmd == "prerelease" || cmd == "patch" || cmd == "minor" || cmd == "major" {
 
-    if isDry==false && hasConfig {
-      script := conf.GetPreVersion()
-      if script!="" {
-      	logger.Println("preversion=" + script)
-        out, err := gump.ExecScript(script)
-      	if err != nil {
-          fmt.Println("An has error occured while executing preversion script!")
-          fmt.Println("script: " + script)
-          fmt.Println(out)
-          exitWithError(err)
-      	}
-        fmt.Println(out)
-      }
-    }
+		if isDry == false && hasConfig {
+			script := conf.GetPreVersion()
+			if script != "" {
+				logger.Println("preversion=" + script)
+				out, err := gump.ExecScript(script)
+				if err != nil {
+					fmt.Println("An has error occured while executing preversion script!")
+					fmt.Println("script: " + script)
+					fmt.Println(out)
+					exitWithError(err)
+				}
+				fmt.Println(out)
+			}
+		}
 
-    newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
-    logger.Println("newVersion=" + newVersion)
-    if err!=nil {
-      exitWithError(err)
-    }
+		newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
+		logger.Println("newVersion=" + newVersion)
+		if err != nil {
+			exitWithError(err)
+		}
 
-    if isDry {
-      fmt.Println("The new tag to create is: " + newVersion)
-    }
+		if isDry {
+			fmt.Println("The new tag to create is: " + newVersion)
+		}
 
-    if isDry==false {
-      ok, out, err := repoutils.CreateTag(vcs, path, newVersion)
-    	logger.Printf("ok=%q\n", ok)
-      if err!=nil {
-        fmt.Println(out)
-        exitWithError(err)
-      }
-      if ok!=true {
-        fmt.Println(out)
-        exitWithError(errors.New("Something gone wrong!"))
-      }
-      fmt.Println("Created new tag " + newVersion)
-    }
+		if isDry == false {
+			ok, out, err := repoutils.CreateTag(vcs, path, newVersion)
+			logger.Printf("ok=%t\n", ok)
+			if err != nil {
+				fmt.Println(out)
+				exitWithError(err)
+			}
+			if ok != true {
+				fmt.Println(out)
+				exitWithError(errors.New("Something gone wrong!"))
+			}
+			fmt.Println("Created new tag " + newVersion)
+		}
 
-    if isDry==false && hasConfig {
-      script := conf.GetPostVersion()
-    	logger.Println("postversion=" + script)
-      if script!="" {
-        out, err := gump.ExecScript(script)
-      	if err != nil {
-          fmt.Println("An has error occured while executing postversion script!")
-          fmt.Println("script: " + script)
-          fmt.Println(out)
-          exitWithError(err)
-      	}
-        fmt.Println(out)
-      }
-    }
+		if isDry == false && hasConfig {
+			script := conf.GetPostVersion()
+			logger.Println("postversion=" + script)
+			if script != "" {
+				out, err := gump.ExecScript(script)
+				if err != nil {
+					fmt.Println("An has error occured while executing postversion script!")
+					fmt.Println("script: " + script)
+					fmt.Println(out)
+					exitWithError(err)
+				}
+				fmt.Println(out)
+			}
+		}
 
 	} else if cmd == "" {
-		fmt.Println("Wrong usage: Missing command\n")
+		fmt.Println("Wrong usage: Missing command")
+		fmt.Println("")
 		fmt.Println(usage)
 		os.Exit(1)
 	} else {
@@ -140,9 +141,9 @@ Options:
 	}
 }
 
-func exitWithError (err error) {
-  fmt.Println(err)
-  os.Exit(1)
+func exitWithError(err error) {
+	fmt.Println(err)
+	os.Exit(1)
 }
 
 func getCommand(arguments map[string]interface{}) string {

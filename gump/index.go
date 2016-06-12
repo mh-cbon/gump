@@ -103,8 +103,9 @@ func IncrementPrerelease (currentVersion *semver.Version, beta bool, alpha bool)
         id := 0
         var err error
         if sid!="" {
-          if sid[0:1]!="-" || sid[0:1]!="." {
-            d = sid[0:1]
+          p := sid[0:1]
+          if p!="-" && p!="." {
+            d = p
             id, err = strconv.Atoi(sid[1:])
             if err!=nil {
               return "", err
@@ -117,7 +118,7 @@ func IncrementPrerelease (currentVersion *semver.Version, beta bool, alpha bool)
             }
           }
         } else {
-          d = "."
+          d = ""
         }
         currentVersion.SetPrerelease(name + d + strconv.Itoa(id + 1))
       }
