@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/docopt/docopt.go"
 	"github.com/mh-cbon/go-repo-utils/repoutils"
@@ -20,10 +21,10 @@ func main() {
 	usage := `Gump - Bump your package
 
 Usage:
-  gump prerelease [-b|--beta] [-a|--alpha] [-d|--dry]
-  gump patch [-d|--dry]
-  gump minor [-d|--dry]
-  gump major [-d|--dry]
+  gump prerelease [-b|--beta] [-a|--alpha] [-d|--dry] [-m <message>]
+  gump patch [-d|--dry] [-m <message>]
+  gump minor [-d|--dry] [-m <message>]
+  gump major [-d|--dry] [-m <message>]
   gump -h | --help
   gump -v | --version
 
@@ -33,6 +34,13 @@ Options:
   -d --dry              Only display the new version number.
   -b --beta             Update last beta version.
   -a --alpha            Update last alpha version.
+  -m                    Set tag message.
+
+Examples
+  # Bump patch with a message
+  gump patch -m "tag message"
+  # Bump major with a message
+  gump major -m "tag message"
 `
 
 	arguments, err := docopt.Parse(usage, nil, true, "Gump 0.0.4", false)
@@ -43,6 +51,9 @@ Options:
 	}
 
 	isDry := isDry(arguments)
+	logger.Println("isDry=", isDry)
+	message := getMessage(arguments)
+	logger.Println("message=" + message)
 
 	path, err := os.Getwd()
 	logger.Println("path=" + path)
@@ -69,32 +80,36 @@ Options:
 
 	if cmd == "prerelease" || cmd == "patch" || cmd == "minor" || cmd == "major" {
 
-		if isDry == false && hasConfig {
-			script := conf.GetPreVersion()
-			if script != "" {
-				logger.Println("preversion=" + script)
-				out, err := gump.ExecScript(script)
-				if err != nil {
-					fmt.Println("An has error occured while executing preversion script!")
-					fmt.Println("script: " + script)
-					fmt.Println(out)
-					exitWithError(err)
-				}
-				fmt.Println(out)
-			}
-		}
-
 		newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
 		logger.Println("newVersion=" + newVersion)
 		if err != nil {
 			exitWithError(err)
 		}
 
-		if isDry {
-			fmt.Println("The new tag to create is: " + newVersion)
+		if hasConfig {
+			script := conf.GetPreVersion()
+			if script != "" {
+				script = strings.Replace(script, "!newversion!", newVersion, -1)
+				script = strings.Replace(script, "!tagmessage!", message, -1)
+				if isDry {
+					fmt.Println("preversion:" + script)
+				} else {
+					logger.Println("preversion=" + script)
+					out, err := gump.ExecScript(script)
+					if err != nil {
+						fmt.Println("An has error occured while executing preversion script!")
+						fmt.Println("script: " + script)
+						fmt.Println(out)
+						exitWithError(err)
+					}
+					fmt.Println(out)
+				}
+			}
 		}
 
-		if isDry == false {
+		if isDry {
+			fmt.Println("The new tag to create is: " + newVersion)
+		} else {
 			ok, err := repoutils.IsClean(vcs, path)
 			if ok == false {
 				exitWithError(errors.New("Your local copy contains uncommited changes!"))
@@ -102,7 +117,7 @@ Options:
 			if err != nil {
 				exitWithError(err)
 			}
-			ok, out, err := repoutils.CreateTag(vcs, path, newVersion)
+			ok, out, err := repoutils.CreateTag(vcs, path, newVersion, message)
 			logger.Printf("ok=%t\n", ok)
 			if err != nil {
 				fmt.Println(out)
@@ -117,16 +132,22 @@ Options:
 
 		if isDry == false && hasConfig {
 			script := conf.GetPostVersion()
-			logger.Println("postversion=" + script)
 			if script != "" {
-				out, err := gump.ExecScript(script)
-				if err != nil {
-					fmt.Println("An has error occured while executing postversion script!")
-					fmt.Println("script: " + script)
+				script = strings.Replace(script, "!newversion!", newVersion, -1)
+				script = strings.Replace(script, "!tagmessage!", message, -1)
+				if isDry {
+					fmt.Println("postversion:" + script)
+				} else {
+					logger.Println("postversion=" + script)
+					out, err := gump.ExecScript(script)
+					if err != nil {
+						fmt.Println("An has error occured while executing postversion script!")
+						fmt.Println("script: " + script)
+						fmt.Println(out)
+						exitWithError(err)
+					}
 					fmt.Println(out)
-					exitWithError(err)
 				}
-				fmt.Println(out)
 			}
 		}
 
@@ -172,6 +193,14 @@ func getCommand(arguments map[string]interface{}) string {
 		}
 	}
 	return ""
+}
+
+func getMessage(arguments map[string]interface{}) string {
+	message := ""
+	if mess, ok := arguments["-m"].(string); ok {
+		message = mess
+	}
+	return message
 }
 
 func isDry(arguments map[string]interface{}) bool {

@@ -1,5 +1,5 @@
-hash: 03b9f926cac726205aafa1141b59d1735d35ef8393849b0bce34290aed170a6b
-updated: 2016-06-12T16:55:14.187853396+02:00
+hash: d9e0727d6b5ee0f3173d363c491e311702353d4803fdb37e2bf3d7b3b8b0a1ba
+updated: 2016-06-13T12:39:11.214144775+02:00
 imports:
 - name: github.com/docopt/docopt.go
   version: 784ddc588536785e7299f7272f39101f7faccc3f
@@ -16,7 +16,7 @@ imports:
   version: 56b76bdf51f7708750eac80fa38b952bb9f32639
   repo: https://github.com/mattn/go-isatty
 - name: github.com/mh-cbon/go-repo-utils
-  version: 2025721709f00bac7b69dbb3f4e8b30eaf25ca0b
+  version: fdb29ba9b24fdf05ed80491c67850ec5aad1f53d
   subpackages:
   - repoutils
   - bzr

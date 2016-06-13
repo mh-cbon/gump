@@ -42,6 +42,7 @@ func TestGumpIncMinor(t *testing.T) {
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(err)
+		fmt.Println(string(out))
 		t.Errorf("Expected err=nil, got err=%s\n", err)
 	}
 	if cmd.ProcessState.Success() == false {
@@ -50,9 +51,11 @@ func TestGumpIncMinor(t *testing.T) {
 	}
 	tags, err := repoutils.List("git", "/home/vagrant/git")
 	if err != nil {
+		fmt.Println(string(out))
 		t.Errorf("Expected err=nil, got err=%s\n", err)
 	}
 	if contains(tags, "1.1.0") == false {
+		fmt.Println(string(out))
 		t.Errorf("Expected tags to contain 1.1.0, but it was not found in %s\n", tags)
 	}
 }
@@ -280,6 +283,31 @@ func TestGumpWithKoScripts(t *testing.T) {
 	}
 	if contains(tags, "0.0.1-beta") == true {
 		t.Errorf("Expected tags to not contain 0.0.1-beta, but it was found in %s\n", tags)
+	}
+}
+
+func TestGumpIncPatchWithMessage(t *testing.T) {
+	args := []string{"patch", "-m", "message"}
+	bin := "/vagrant/build/gump"
+	cmd := exec.Command(bin, args...)
+	cmd.Dir = "/home/vagrant/git"
+	fmt.Printf("%s: %s %s\n", cmd.Dir, bin, args)
+
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(err)
+		t.Errorf("Expected err=nil, got err=%s\n", err)
+	}
+	if cmd.ProcessState.Success() == false {
+		fmt.Println(string(out))
+		t.Errorf("Expected success=true, got success=%t\n", true)
+	}
+	tags, err := repoutils.List("git", "/home/vagrant/git")
+	if err != nil {
+		t.Errorf("Expected err=nil, got err=%s\n", err)
+	}
+	if contains(tags, "2.0.3") == false {
+		t.Errorf("Expected tags to contain 2.0.3, but it was not found in %s\n", tags)
 	}
 }
 
