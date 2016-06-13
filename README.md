@@ -75,9 +75,22 @@ scripts:
   postversion: echo "goodbye"
 ```
 
+If you have longer scripts to run you can write it like this:
+
+```yml
+scripts:
+  preversion: |
+    echo "hello" \
+    && echo "how are you ?"
+  postversion: |
+    echo "I m fine"
+    && echo "goodbye"
+```
+
 ## changelog
 
-- 0.0.8: Add `-m` argument, add `!newversion!` and `!tagmessage!` tags.
+- 0.0.11: Add YAML multiline scripts support. Updated release scripts.
+- 0.0.10: Add `-m` argument, add `!newversion!` and `!tagmessage!` tags.
 - up to 0.0.7: various minor improvements.
 - 0.0.1: Initial release
 
