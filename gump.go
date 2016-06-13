@@ -130,7 +130,7 @@ Examples
 			fmt.Println("Created new tag " + newVersion)
 		}
 
-		if isDry == false && hasConfig {
+		if hasConfig {
 			script := conf.GetPostVersion()
 			if script != "" {
 				script = strings.Replace(script, "!newversion!", newVersion, -1)
