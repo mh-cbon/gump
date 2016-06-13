@@ -3,6 +3,8 @@ package config
 import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+  "strings"
+  "regexp"
 )
 
 // Config is the top-level configuration object.
@@ -28,9 +30,15 @@ func (g *GlideConfig) Parse(data []byte) error {
 }
 
 func (g *GlideConfig) GetPreVersion() string {
-	return g.Scripts.PreVersion
+  s := g.Scripts.PreVersion
+	lineContinue := regexp.MustCompile(`[\\]\n*`)
+  s = lineContinue.ReplaceAllString(s, "")
+	return strings.TrimRight(strings.TrimRight(s, " "), "\n")
 }
 
 func (g *GlideConfig) GetPostVersion() string {
-	return g.Scripts.PostVersion
+  s := g.Scripts.PostVersion
+	lineContinue := regexp.MustCompile(`[\\]\n*`)
+  s = lineContinue.ReplaceAllString(s, "")
+	return strings.TrimRight(strings.TrimRight(s, " "), "\n")
 }

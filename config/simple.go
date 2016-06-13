@@ -25,7 +25,7 @@ func (v *SimpleConfig) Parse(data []byte) error {
 
 	lineEnding := regexp.MustCompile("\r\n|\n")
 	comments := regexp.MustCompile(`^\s*#`)
-	lineContinue := regexp.MustCompile(`[\\]\s*$`)
+	lineContinue := regexp.MustCompile(`[\\]\n*$`)
 	scriptId := regexp.MustCompile(`^\s*(preversion|postversion):\s*(.+)`)
 
 	lines := lineEnding.Split(string(data), -1)
