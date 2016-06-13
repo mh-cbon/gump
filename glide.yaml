@@ -1,6 +1,10 @@
 package: github.com/mh-cbon/gump
 scripts:
-  preversion: git fetch --tags && philea "go vet %s" "go fmt %s"
+  preversion: |
+    git fetch --tags \
+    && philea "go vet %s" "go fmt %s" \
+    && gen-version-file --ver=!newversion! \
+    && commit -f "GenVersionFile/index.go" -m "version update"
   postversion: git push && git push --tags
 import:
 - package: github.com/docopt/docopt.go
