@@ -6,14 +6,14 @@ import (
 	"runtime"
 )
 
-func Command(cmd string) (*exec.Cmd, error) {
+func Command(cwd string, cmd string) (*exec.Cmd, error) {
 	if runtime.GOOS == "windows" {
-		return ExecStringWindows(cmd)
+		return ExecStringWindows(cwd, cmd)
 	}
-	return ExecStringFriendlyUnix(cmd)
+	return ExecStringFriendlyUnix(cwd, cmd)
 }
 
-func ExecStringWindows(cmd string) (*exec.Cmd, error) {
+func ExecStringWindows(cwd string, cmd string) (*exec.Cmd, error) {
 	dir, err := ioutil.TempDir("", "stringexec")
 	if err != nil {
 		return nil, err
@@ -24,13 +24,13 @@ func ExecStringWindows(cmd string) (*exec.Cmd, error) {
 	}
 
 	oCmd := exec.Command("cmd", []string{dir + "/some.bat"}...)
-	oCmd.Dir = dir
+	oCmd.Dir = cwd
 	// defer os.Remove(tmpfile.Name()) // clean up // not sure how to clean it :x
 	return oCmd, nil
 }
 
-func ExecStringFriendlyUnix(cmd string) (*exec.Cmd, error) {
+func ExecStringFriendlyUnix(cwd string, cmd string) (*exec.Cmd, error) {
 	oCmd := exec.Command("sh", []string{"-c", cmd}...)
-	oCmd.Dir = dir
+	oCmd.Dir = cwd
 	return oCmd, nil
 }

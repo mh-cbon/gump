@@ -140,8 +140,8 @@ func DetermineTheNewTag(path string, how string, beta bool, alpha bool) (string,
 	return newVersion, err
 }
 
-func ExecScript(script string) (string, error) {
-	cmd, err := stringexec.Command(script)
+func ExecScript(cwd string, script string) (string, error) {
+	cmd, err := stringexec.Command(cwd, script)
 	if err != nil {
 		return "", err
 	}

@@ -96,7 +96,7 @@ Examples
 					fmt.Println("preversion:" + script)
 				} else {
 					logger.Println("preversion=" + script)
-					out, err := gump.ExecScript(script)
+					out, err := gump.ExecScript(path, script)
 					if err != nil {
 						fmt.Println("An has error occured while executing preversion script!")
 						fmt.Println("script: " + script)
@@ -140,7 +140,7 @@ Examples
 					fmt.Println("postversion:" + script)
 				} else {
 					logger.Println("postversion=" + script)
-					out, err := gump.ExecScript(script)
+					out, err := gump.ExecScript(path, script)
 					if err != nil {
 						fmt.Println("An has error occured while executing postversion script!")
 						fmt.Println("script: " + script)
