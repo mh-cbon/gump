@@ -4,6 +4,8 @@ Bin util to bump your package using semver
 
 ## Install
 
+You can grab a pre-built binary file in the [releases page](https://github.com/mh-cbon/gump/releases)
+
 ```sh
 mkdir -p $GOPATH/github.com/mh-cbon
 cd $GOPATH/github.com/mh-cbon

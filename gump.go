@@ -9,13 +9,14 @@ import (
 
 	"github.com/docopt/docopt.go"
 	"github.com/mh-cbon/go-repo-utils/repoutils"
-	"github.com/mh-cbon/gump/GenVersionFile"
 	"github.com/mh-cbon/gump/config"
 	"github.com/mh-cbon/gump/gump"
 	"github.com/mh-cbon/verbose"
 )
 
 var logger = verbose.Auto()
+
+var VERSION = "0.0.0"
 
 func main() {
 
@@ -44,7 +45,7 @@ Examples
   gump major -m "tag message"
 `
 
-	arguments, err := docopt.Parse(usage, nil, true, "Gump - "+GenVersionFile.Version(), false)
+	arguments, err := docopt.Parse(usage, nil, true, "Gump - "+VERSION, false)
 
 	logger.Println(arguments)
 	if err != nil {
