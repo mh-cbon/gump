@@ -100,6 +100,8 @@ VERBOSE=* gump patch -d
 
 ## changelog
 
+- 0.0.13: Live output, refactoring
+- 0.0.12: Improved release scripts
 - 0.0.11: Add YAML multiline scripts support. Updated release scripts.
 - 0.0.10: Add `-m` argument, add `!newversion!` and `!tagmessage!` tags.
 - up to 0.0.7: various minor improvements.
