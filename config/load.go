@@ -23,7 +23,7 @@ func Exists(path string) bool {
 	return false
 }
 
-// Load version script from the given directory 
+// Load version script from the given directory
 func Load(path string) (Configured, error) {
 	var config Configured
 	configType := ""

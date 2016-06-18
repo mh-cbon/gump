@@ -1,8 +1,8 @@
 package stringexec
 
 import (
-  "os"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"runtime"
 )
@@ -27,8 +27,8 @@ func ExecStringWindows(cwd string, cmd string) (*exec.Cmd, error) {
 
 	oCmd := exec.Command("cmd", []string{dir + "/some.bat"}...)
 	oCmd.Dir = cwd
-  oCmd.Stdout = os.Stdout
-  oCmd.Stderr = os.Stderr
+	oCmd.Stdout = os.Stdout
+	oCmd.Stderr = os.Stderr
 	// defer os.Remove(tmpfile.Name()) // clean up // not sure how to clean it :x
 	return oCmd, nil
 }
@@ -36,7 +36,7 @@ func ExecStringWindows(cwd string, cmd string) (*exec.Cmd, error) {
 func ExecStringFriendlyUnix(cwd string, cmd string) (*exec.Cmd, error) {
 	oCmd := exec.Command("sh", []string{"-c", cmd}...)
 	oCmd.Dir = cwd
-  oCmd.Stdout = os.Stdout
-  oCmd.Stderr = os.Stderr
+	oCmd.Stdout = os.Stdout
+	oCmd.Stderr = os.Stderr
 	return oCmd, nil
 }

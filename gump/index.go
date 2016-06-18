@@ -146,7 +146,7 @@ func DetermineTheNewTag(path string, how string, beta bool, alpha bool) (string,
 }
 
 // execute a command string on the underlying command system (bash or cmd)
-func ExecScript(cwd string, script string) (error) {
+func ExecScript(cwd string, script string) error {
 	cmd, err := stringexec.Command(cwd, script)
 	if err != nil {
 		return err
