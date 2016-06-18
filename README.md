@@ -89,6 +89,15 @@ scripts:
     && echo "goodbye"
 ```
 
+## debug
+
+Declare a new env `VERBOSE=gump` or `VERBOSE=*` to get more information.
+
+```sh
+VERBOSE=gump gump patch -d
+VERBOSE=* gump patch -d
+```
+
 ## changelog
 
 - 0.0.11: Add YAML multiline scripts support. Updated release scripts.

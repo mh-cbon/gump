@@ -48,9 +48,7 @@ Examples
 	arguments, err := docopt.Parse(usage, nil, true, "Gump - "+VERSION, false)
 
 	logger.Println(arguments)
-	if err != nil {
-		exitWithError(err)
-	}
+	exitWithError(err)
 
 	isDry := isDry(arguments)
 	logger.Println("isDry=", isDry)
@@ -59,23 +57,19 @@ Examples
 
 	path, err := os.Getwd()
 	logger.Println("path=" + path)
-	if err != nil {
-		exitWithError(err)
-	}
+	exitWithError(err)
 
 	vcs, err := repoutils.WhichVcs(path)
-	if err != nil {
-		exitWithError(err)
-	}
+	exitWithError(err)
 	if vcs == "svn" {
 		exitWithError(errors.New("Sorry ! Subversion is not supported !"))
 	}
 
 	hasConfig := config.Exists(path)
 	conf, err := config.Load(path)
-	if hasConfig && err != nil {
-		exitWithError(err)
-	}
+  if hasConfig {
+    exitWithError(err)
+  }
 
 	cmd := getCommand(arguments)
 	logger.Println("cmd=" + cmd)
@@ -84,73 +78,31 @@ Examples
 
 		newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
 		logger.Println("newVersion=" + newVersion)
-		if err != nil {
-			exitWithError(err)
-		}
+    exitWithError(err)
 
 		if hasConfig {
-			script := conf.GetPreVersion()
-			if script != "" {
-				script = strings.Replace(script, "!newversion!", newVersion, -1)
-				script = strings.Replace(script, "!tagmessage!", message, -1)
-				if isDry {
-					fmt.Println("preversion:" + script)
-				} else {
-					logger.Println("preversion=" + script)
-					out, err := gump.ExecScript(path, script)
-					if err != nil {
-						fmt.Println("An has error occured while executing preversion script!")
-						fmt.Println("script: " + script)
-						fmt.Println(out)
-						exitWithError(err)
-					}
-					fmt.Println(out)
-				}
-			}
+      err := executePreVersion(conf, path, newVersion, message, isDry)
+      if err != nil {
+        fmt.Println("An has error occured while executing preversion script!")
+      }
+      exitWithError(err)
 		}
 
 		if isDry {
 			fmt.Println("The new tag to create is: " + newVersion)
 		} else {
-			ok, err := repoutils.IsClean(vcs, path)
-			if ok == false {
-				exitWithError(errors.New("Your local copy contains uncommited changes!"))
-			}
-			if err != nil {
-				exitWithError(err)
-			}
-			ok, out, err := repoutils.CreateTag(vcs, path, newVersion, message)
-			logger.Printf("ok=%t\n", ok)
-			if err != nil {
-				fmt.Println(out)
-				exitWithError(err)
-			}
-			if ok != true {
-				fmt.Println(out)
-				exitWithError(errors.New("Something gone wrong!"))
-			}
+      out, err := applyVersionUpgrade(vcs, path, newVersion, message)
+			fmt.Println(out)
+			exitWithError(err)
 			fmt.Println("Created new tag " + newVersion)
 		}
 
 		if hasConfig {
-			script := conf.GetPostVersion()
-			if script != "" {
-				script = strings.Replace(script, "!newversion!", newVersion, -1)
-				script = strings.Replace(script, "!tagmessage!", message, -1)
-				if isDry {
-					fmt.Println("postversion:" + script)
-				} else {
-					logger.Println("postversion=" + script)
-					out, err := gump.ExecScript(path, script)
-					if err != nil {
-						fmt.Println("An has error occured while executing postversion script!")
-						fmt.Println("script: " + script)
-						fmt.Println(out)
-						exitWithError(err)
-					}
-					fmt.Println(out)
-				}
-			}
+      err := executePostVersion(conf, path, newVersion, message, isDry)
+      if err != nil {
+        fmt.Println("An has error occured while executing postversion script!")
+      }
+      exitWithError(err)
 		}
 
 	} else if cmd == "" {
@@ -164,11 +116,64 @@ Examples
 	}
 }
 
-func exitWithError(err error) {
-	fmt.Println(err)
-	os.Exit(1)
+func applyVersionUpgrade (vcs string, path string, newVersion string, message string) (string, error) {
+  ok, err := repoutils.IsClean(vcs, path)
+  if ok == false {
+    return "", errors.New("Your local copy contains uncommited changes!")
+  }
+  if err!=nil {
+    return "", err
+  }
+  ok, out, err := repoutils.CreateTag(vcs, path, newVersion, message)
+  logger.Printf("ok=%t\n", ok)
+  if err==nil && ok != true{
+    err = errors.New("Something gone wrong!")
+  }
+  return out, err
 }
 
+// executes the preversion script of given config if it is not empty
+func executePreVersion (conf config.Configured, path string, newVersion string, message string, dry bool) error {
+  script := conf.GetPreVersion()
+  if script != "" {
+    script = strings.Replace(script, "!newversion!", newVersion, -1)
+    script = strings.Replace(script, "!tagmessage!", message, -1)
+    if dry {
+      fmt.Println("preversion:" + script)
+    } else {
+      logger.Println("preversion=" + script)
+      return gump.ExecScript(path, script)
+    }
+  }
+  return nil
+}
+
+// executes the postversion script of given config if it is not empty
+func executePostVersion (conf config.Configured, path string, newVersion string, message string, dry bool) error {
+  script := conf.GetPostVersion()
+  if script != "" {
+    script = strings.Replace(script, "!newversion!", newVersion, -1)
+    script = strings.Replace(script, "!tagmessage!", message, -1)
+    if dry {
+      fmt.Println("postversion:" + script)
+    } else {
+      logger.Println("postversion=" + script)
+      return gump.ExecScript(path, script)
+    }
+  }
+  return nil
+}
+
+// exits current program if error is not nil,
+// prints error on stdout
+func exitWithError(err error) {
+  if err != nil {
+  	fmt.Println(err)
+  	os.Exit(1)
+  }
+}
+
+// helper to get the next type of desired version
 func getCommand(arguments map[string]interface{}) string {
 	p, ok := arguments["patch"]
 	if ok {
@@ -197,6 +202,7 @@ func getCommand(arguments map[string]interface{}) string {
 	return ""
 }
 
+// helper to get the value of the message of the command line
 func getMessage(arguments map[string]interface{}) string {
 	message := ""
 	if mess, ok := arguments["-m"].(string); ok {
@@ -205,6 +211,7 @@ func getMessage(arguments map[string]interface{}) string {
 	return message
 }
 
+// helper to get the value --dry on the command line
 func isDry(arguments map[string]interface{}) bool {
 	dry := false
 	if isDry, ok := arguments["--dry"].(bool); ok {
@@ -217,6 +224,7 @@ func isDry(arguments map[string]interface{}) bool {
 	return dry
 }
 
+// helper to get the value of --beta on the command line
 func isBeta(arguments map[string]interface{}) bool {
 	beta := false
 	if isBeta, ok := arguments["--beta"].(bool); ok {
@@ -229,6 +237,7 @@ func isBeta(arguments map[string]interface{}) bool {
 	return beta
 }
 
+// helper to get the value of --alpha on the command line
 func isAlpha(arguments map[string]interface{}) bool {
 	alpha := false
 	if isAlpha, ok := arguments["--alpha"].(bool); ok {

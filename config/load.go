@@ -5,12 +5,14 @@ import (
 	"os"
 )
 
+// Configured is a facade to a glide.yaml / . version script file
 type Configured interface {
 	Load(path string) error
 	GetPreVersion() string
 	GetPostVersion() string
 }
 
+// Exists tells if a version/glide.yaml file exists at given directory
 func Exists(path string) bool {
 	if _, err := os.Stat(path + "/.version"); !os.IsNotExist(err) {
 		return true
@@ -21,6 +23,7 @@ func Exists(path string) bool {
 	return false
 }
 
+// Load version script from the given directory 
 func Load(path string) (Configured, error) {
 	var config Configured
 	configType := ""

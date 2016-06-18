@@ -5,11 +5,12 @@ import (
 	"regexp"
 )
 
-// Config is the top-level configuration object.
+// SimpleConfig is a parser loader for .version file
 type SimpleConfig struct {
 	values map[string]string
 }
 
+// Load given path into the current SimpleConfig object
 func (v *SimpleConfig) Load(path string) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -18,6 +19,7 @@ func (v *SimpleConfig) Load(path string) error {
 	return v.Parse(data)
 }
 
+// Parse and load given data into the current SimpleConfig object
 func (v *SimpleConfig) Parse(data []byte) error {
 	v.values = make(map[string]string)
 	v.values["preversion"] = ""
@@ -58,10 +60,12 @@ func (v *SimpleConfig) Parse(data []byte) error {
 	return nil
 }
 
+// GetPreVersion returns the content of preversion field
 func (v *SimpleConfig) GetPreVersion() string {
 	return v.values["preversion"]
 }
 
+// GetPostVersion returns the content of postversion field
 func (v *SimpleConfig) GetPostVersion() string {
 	return v.values["postversion"]
 }

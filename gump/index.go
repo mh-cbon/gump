@@ -4,7 +4,6 @@ import (
 	"errors"
 	"regexp"
 	"strconv"
-	"strings"
 
 	"github.com/mh-cbon/go-repo-utils/repoutils"
 	"github.com/mh-cbon/gump/stringexec"
@@ -14,6 +13,7 @@ import (
 
 var logger = verbose.Auto()
 
+// return the list of tags registered in the underlying vcs
 func GetTags(path string) ([]string, error) {
 	vcs, err := repoutils.WhichVcs(path)
 	logger.Println("vcs=" + vcs)
@@ -32,6 +32,8 @@ func GetTags(path string) ([]string, error) {
 	return tags, nil
 }
 
+// returns the most recent tag, could be prerelease,
+// registered in the underlying vcs
 func GetMostRecentTag(tags []string) string {
 	mostRecentTag := ""
 	if len(tags) > 0 {
@@ -45,6 +47,7 @@ func GetMostRecentTag(tags []string) string {
 	return mostRecentTag
 }
 
+// Create the new version string
 func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (string, error) {
 	currentVersion, err := semver.NewVersion(mostRecentTag)
 	if err != nil {
@@ -75,6 +78,7 @@ func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (s
 	return currentVersion.String(), nil
 }
 
+// Given a version, increment it to reach the next prerelease value
 func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) (string, error) {
 	if currentVersion.Prerelease() == "" {
 		currentVersion.IncPatch()
@@ -128,6 +132,7 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 	return currentVersion.String(), nil
 }
 
+// Given a path managed by a vcs, create the new version string
 func DetermineTheNewTag(path string, how string, beta bool, alpha bool) (string, error) {
 	tags, err := GetTags(path)
 	if err != nil {
@@ -140,13 +145,11 @@ func DetermineTheNewTag(path string, how string, beta bool, alpha bool) (string,
 	return newVersion, err
 }
 
-func ExecScript(cwd string, script string) (string, error) {
+// execute a command string on the underlying command system (bash or cmd)
+func ExecScript(cwd string, script string) (error) {
 	cmd, err := stringexec.Command(cwd, script)
 	if err != nil {
-		return "", err
+		return err
 	}
-	out, err := cmd.CombinedOutput()
-	sOut := strings.TrimSuffix(string(out), "\n")
-	sOut = strings.TrimSuffix(sOut, "\r")
-	return sOut, err
+	return cmd.Run()
 }
