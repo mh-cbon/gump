@@ -124,9 +124,9 @@ func applyVersionUpgrade(vcs string, path string, newVersion string, message str
 	if err != nil {
 		return "", err
 	}
-  if len(message)==0 {
-    message = "tag: " + newVersion
-  }
+	if len(message) == 0 {
+		message = "tag: " + newVersion
+	}
 	ok, out, err := repoutils.CreateTag(vcs, path, newVersion, message)
 	logger.Printf("ok=%t\n", ok)
 	if err == nil && ok != true {
