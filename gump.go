@@ -76,17 +76,17 @@ Examples
 
 	if cmd == "prerelease" || cmd == "patch" || cmd == "minor" || cmd == "major" {
 
-		newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
-		logger.Println("newVersion=" + newVersion)
-		exitWithError(err)
-
 		if hasConfig {
-			err := executePreVersion(conf, path, newVersion, message, isDry)
+			err := executePreVersion(conf, path, message, isDry)
 			if err != nil {
 				fmt.Println("An has error occured while executing preversion script!")
 			}
 			exitWithError(err)
 		}
+
+		newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
+		logger.Println("newVersion=" + newVersion)
+		exitWithError(err)
 
 		if isDry {
 			fmt.Println("The new tag to create is: " + newVersion)
@@ -124,6 +124,9 @@ func applyVersionUpgrade(vcs string, path string, newVersion string, message str
 	if err != nil {
 		return "", err
 	}
+  if len(message)==0 {
+    message = "tag: " + newVersion
+  }
 	ok, out, err := repoutils.CreateTag(vcs, path, newVersion, message)
 	logger.Printf("ok=%t\n", ok)
 	if err == nil && ok != true {
@@ -133,10 +136,9 @@ func applyVersionUpgrade(vcs string, path string, newVersion string, message str
 }
 
 // executes the preversion script of given config if it is not empty
-func executePreVersion(conf config.Configured, path string, newVersion string, message string, dry bool) error {
+func executePreVersion(conf config.Configured, path string, message string, dry bool) error {
 	script := conf.GetPreVersion()
 	if script != "" {
-		script = strings.Replace(script, "!newversion!", newVersion, -1)
 		script = strings.Replace(script, "!tagmessage!", message, -1)
 		if dry {
 			fmt.Println("preversion:" + script)

@@ -100,6 +100,7 @@ VERBOSE=* gump patch -d
 
 ## changelog
 
+- 0.1.0: Ensure the new tag is determined after preversion script has run 
 - 0.0.13: Live output, refactoring
 - 0.0.12: Improved release scripts
 - 0.0.11: Add YAML multiline scripts support. Updated release scripts.
