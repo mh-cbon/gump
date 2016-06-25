@@ -25,7 +25,7 @@ func ExecStringWindows(cwd string, cmd string) (*exec.Cmd, error) {
 		return nil, err
 	}
 
-	oCmd := exec.Command("cmd", []string{dir + "/some.bat"}...)
+	oCmd := exec.Command("cmd", []string{"/C", dir + "/some.bat"}...)
 	oCmd.Dir = cwd
 	oCmd.Stdout = os.Stdout
 	oCmd.Stderr = os.Stderr
