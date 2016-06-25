@@ -9,14 +9,14 @@ import (
 type Configured interface {
 	Load(path string) error
 	GetPreBump() string
-  GetPrePatch() string
+	GetPrePatch() string
 	GetPreMinor() string
 	GetPreMajor() string
 	GetPreVersion() string
 	GetPostVersion() string
-  GetPostMajor() string
-  GetPostMinor() string
-  GetPostPatch() string
+	GetPostMajor() string
+	GetPostMinor() string
+	GetPostPatch() string
 	GetPostBump() string
 }
 
@@ -58,36 +58,36 @@ func Load(path string) (Configured, error) {
 
 // get a script given its string name
 func GetScript(which string, c Configured) string {
-  if which=="prebump" {
-    return c.GetPreBump()
+	if which == "prebump" {
+		return c.GetPreBump()
 
-  } else if which=="prepatch" {
-    return c.GetPrePatch()
+	} else if which == "prepatch" {
+		return c.GetPrePatch()
 
-  } else if which=="preminor" {
-    return c.GetPreMinor()
+	} else if which == "preminor" {
+		return c.GetPreMinor()
 
-  } else if which=="premajor" {
-    return c.GetPreMajor()
+	} else if which == "premajor" {
+		return c.GetPreMajor()
 
-  } else if which=="preversion" {
-    return c.GetPreVersion()
+	} else if which == "preversion" {
+		return c.GetPreVersion()
 
-  } else if which=="postversion" {
-    return c.GetPostVersion()
+	} else if which == "postversion" {
+		return c.GetPostVersion()
 
-  } else if which=="postmajor" {
-    return c.GetPostMajor()
+	} else if which == "postmajor" {
+		return c.GetPostMajor()
 
-  } else if which=="postminor" {
-    return c.GetPostMinor()
+	} else if which == "postminor" {
+		return c.GetPostMinor()
 
-  } else if which=="postpatch" {
-    return c.GetPostPatch()
+	} else if which == "postpatch" {
+		return c.GetPostPatch()
 
-  } else if which=="postbump" {
-    return c.GetPostBump()
+	} else if which == "postbump" {
+		return c.GetPostBump()
 
-  }
+	}
 	return ""
 }

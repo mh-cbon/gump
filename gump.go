@@ -109,12 +109,12 @@ Examples
 		if hasConfig {
 			executeScript("postversion", conf, path, newVersion, message, isDry)
 		}
-    if hasConfig && cmd == "major" {
-      executeScript("postmajor", conf, path, newVersion, message, isDry)
-    }
-    if hasConfig && cmd == "minor" {
-      executeScript("postminor", conf, path, newVersion, message, isDry)
-    }
+		if hasConfig && cmd == "major" {
+			executeScript("postmajor", conf, path, newVersion, message, isDry)
+		}
+		if hasConfig && cmd == "minor" {
+			executeScript("postminor", conf, path, newVersion, message, isDry)
+		}
 		if hasConfig && cmd == "patch" {
 			executeScript("postpatch", conf, path, newVersion, message, isDry)
 		}
@@ -160,12 +160,12 @@ func executeScript(which string, conf config.Configured, path string, newVersion
 		script = strings.Replace(script, "!newversion!", newVersion, -1)
 		script = strings.Replace(script, "!tagmessage!", message, -1)
 		if dry {
-			fmt.Println(which+":" + script)
+			fmt.Println(which + ":" + script)
 		} else {
-			logger.Println(which+"=" + script)
+			logger.Println(which + "=" + script)
 			err := gump.ExecScript(path, script)
 			if err != nil {
-				fmt.Println("An has error occured while executing "+which+" script!")
+				fmt.Println("An has error occured while executing " + which + " script!")
 			}
 			exitWithError(err)
 		}
