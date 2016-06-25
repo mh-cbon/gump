@@ -1,8 +1,8 @@
 package: github.com/mh-cbon/gump
 scripts:
+  prebump: 666 git fetch --tags
   preversion: |
-    666 git fetch --tags \
-    && philea -s "666 go vet %s" "666 go-fmt-fail %s" \
+    philea -s "666 go vet %s" "666 go-fmt-fail %s" \
     && 666 rm-glob -r build/ \
     && 666 rm-glob -r assets/ \
     && 666 build-them-all build main.go -o "build/&os-&arch/&pkg" --ldflags "-X main.VERSION=!newversion!"
