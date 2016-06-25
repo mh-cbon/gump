@@ -102,3 +102,59 @@ postversion: else \
 		t.Errorf("Expected %q got %q\n", expected, s.values["postversion"])
 	}
 }
+
+func TestAllFieldsSimpleConfig(t *testing.T) {
+	s := SimpleConfig{}
+	s.Parse([]byte(`
+prebump: prebump
+prepatch: prepatch
+preminor: preminor
+premajor: premajor
+preversion: preversion
+postversion: postversion
+postmajor: postmajor
+postminor: postminor
+postpatch: postpatch
+postbump: postbump
+`))
+	expected := "prebump"
+	if s.GetPreBump() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPreBump())
+	}
+	expected = "prepatch"
+	if s.GetPrePatch() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPrePatch())
+	}
+	expected = "preminor"
+	if s.GetPreMinor() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPreMinor())
+	}
+	expected = "premajor"
+	if s.GetPreMajor() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPreMajor())
+	}
+	expected = "preversion"
+	if s.GetPreVersion() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPreVersion())
+	}
+	expected = "postversion"
+	if s.GetPostVersion() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPostVersion())
+	}
+	expected = "postmajor"
+	if s.GetPostMajor() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPostMajor())
+	}
+	expected = "postminor"
+	if s.GetPostMinor() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPostMinor())
+	}
+	expected = "postpatch"
+	if s.GetPostPatch() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPostPatch())
+	}
+	expected = "postbump"
+	if s.GetPostBump() != expected {
+		t.Errorf("Expected %q got %q\n", expected, s.GetPostBump())
+	}
+}

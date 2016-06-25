@@ -77,16 +77,25 @@ Examples
 	if cmd == "prerelease" || cmd == "patch" || cmd == "minor" || cmd == "major" {
 
 		if hasConfig {
-			err := executePreVersion(conf, path, message, isDry)
-			if err != nil {
-				fmt.Println("An has error occured while executing preversion script!")
-			}
-			exitWithError(err)
+			executeScript("prebump", conf, path, "", message, isDry)
 		}
 
 		newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
 		logger.Println("newVersion=" + newVersion)
 		exitWithError(err)
+
+		if hasConfig && cmd == "patch" {
+			executeScript("prepatch", conf, path, newVersion, message, isDry)
+		}
+		if hasConfig && cmd == "minor" {
+			executeScript("preminor", conf, path, newVersion, message, isDry)
+		}
+		if hasConfig && cmd == "major" {
+			executeScript("premajor", conf, path, newVersion, message, isDry)
+		}
+		if hasConfig {
+			executeScript("preversion", conf, path, newVersion, message, isDry)
+		}
 
 		if isDry {
 			fmt.Println("The new tag to create is: " + newVersion)
@@ -98,11 +107,19 @@ Examples
 		}
 
 		if hasConfig {
-			err := executePostVersion(conf, path, newVersion, message, isDry)
-			if err != nil {
-				fmt.Println("An has error occured while executing postversion script!")
-			}
-			exitWithError(err)
+			executeScript("postversion", conf, path, newVersion, message, isDry)
+		}
+    if hasConfig && cmd == "major" {
+      executeScript("postmajor", conf, path, newVersion, message, isDry)
+    }
+    if hasConfig && cmd == "minor" {
+      executeScript("postminor", conf, path, newVersion, message, isDry)
+    }
+		if hasConfig && cmd == "patch" {
+			executeScript("postpatch", conf, path, newVersion, message, isDry)
+		}
+		if hasConfig {
+			executeScript("postbump", conf, path, newVersion, message, isDry)
 		}
 
 	} else if cmd == "" {
@@ -110,6 +127,7 @@ Examples
 		fmt.Println("")
 		fmt.Println(usage)
 		os.Exit(1)
+
 	} else {
 		log.Println("Unknown command: '" + cmd + "'")
 		os.Exit(1)
@@ -136,34 +154,22 @@ func applyVersionUpgrade(vcs string, path string, newVersion string, message str
 }
 
 // executes the preversion script of given config if it is not empty
-func executePreVersion(conf config.Configured, path string, message string, dry bool) error {
-	script := conf.GetPreVersion()
-	if script != "" {
-		script = strings.Replace(script, "!tagmessage!", message, -1)
-		if dry {
-			fmt.Println("preversion:" + script)
-		} else {
-			logger.Println("preversion=" + script)
-			return gump.ExecScript(path, script)
-		}
-	}
-	return nil
-}
-
-// executes the postversion script of given config if it is not empty
-func executePostVersion(conf config.Configured, path string, newVersion string, message string, dry bool) error {
-	script := conf.GetPostVersion()
+func executeScript(which string, conf config.Configured, path string, newVersion string, message string, dry bool) {
+	script := config.GetScript(which, conf)
 	if script != "" {
 		script = strings.Replace(script, "!newversion!", newVersion, -1)
 		script = strings.Replace(script, "!tagmessage!", message, -1)
 		if dry {
-			fmt.Println("postversion:" + script)
+			fmt.Println(which+":" + script)
 		} else {
-			logger.Println("postversion=" + script)
-			return gump.ExecScript(path, script)
+			logger.Println(which+"=" + script)
+			err := gump.ExecScript(path, script)
+			if err != nil {
+				fmt.Println("An has error occured while executing "+which+" script!")
+			}
+			exitWithError(err)
 		}
 	}
-	return nil
 }
 
 // exits current program if error is not nil,
