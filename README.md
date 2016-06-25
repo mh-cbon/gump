@@ -47,9 +47,24 @@ Examples
 
 Gump can detect, parse and execute pre/post version scripts.
 
-If `preversion` script fails (return code != 0), then the execution will stop and the version will remain untouched.
+They are numerous scripts executed in this order :
 
-If `postversion` script fails, the version has already changed, `gump` will return an exit code = 1.
+- __prebump__ : Runs in first for any type of update, it does not receive `!newversion!` tag.
+It should be used to synchronize your local with remote.
+- __prepatch__ : Runs for a `patch` update.
+- __preminor__ : Runs for a `minor` update.
+- __premajor__ : Runs for a `major` update.
+- __preversion__ : Runs for a any type of update.
+- __version is set here on your vcs__
+- __postversion__ : Runs for a any type of update.
+- __postmajor__ : Runs for a `major` update.
+- __postminor__ : Runs for a `minor` update.
+- __postpatch__ : Runs for a `patch` update.
+- __postbump__ : Runs for a any type of update.
+
+If any `pre` script returns an exit code different of `0`, then the execution will stop and the version will remain untouched.
+
+If `post` script fails, the version has already changed, `gump` will return an exit code = 1.
 
 Scripts can use two special tags
 - `!newversion!` will be replaced by the value of the new version
@@ -100,7 +115,8 @@ VERBOSE=* gump patch -d
 
 ## changelog
 
-- 0.1.0: Ensure the new tag is determined after preversion script has run 
+- 0.1.1: Add more script hooks.
+- 0.1.0: ~~Ensure the new tag is determined after preversion script has run~~
 - 0.0.13: Live output, refactoring
 - 0.0.12: Improved release scripts
 - 0.0.11: Add YAML multiline scripts support. Updated release scripts.
