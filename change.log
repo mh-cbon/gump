@@ -1,8 +1,18 @@
 
+0.1.5
+
+  * travis: fix build command
+  * appveyor: fix build command
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Fri, 22 Jul 2016 13:30:41 +0200
+
+
+
 0.1.4
 
   * glide: fix dependencies
-  * changelog: 0.1.3
 
   - mh-cbon <mh-cbon@users.noreply.github.com>
 
