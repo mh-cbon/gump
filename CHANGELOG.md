@@ -1,5 +1,18 @@
 # Changelog - gump
 
+### 0.1.6
+
+__Changes__
+
+- changelog: fix changelog version 0.0.2, wrong date, wrong releaser
+
+__Contributors__
+
+- mh-cbon
+
+Released by mh-cbon, Fri 22 Jul 2016
+______________
+
 ### 0.1.5
 
 __Changes__
@@ -240,7 +253,7 @@ __Changes__
 
 - Empty
 
-Released by N/A, Fri 22 Jul 2016
+Released by mh-cbon, Sat 11 Jun 2016
 ______________
 
 ### 0.0.1
