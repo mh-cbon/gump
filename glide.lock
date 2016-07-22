@@ -5,7 +5,7 @@ imports:
   version: 784ddc588536785e7299f7272f39101f7faccc3f
 - name: github.com/fatih/color
   version: 533cd7fd8a85905f67a1753afb4deddc85ea174f
-  repo: git@github.com:fatih/color.git
+  repo: https://github.com/fatih/color
 - name: github.com/Masterminds/semver
   version: 7e56b5cd00f9666fc899aa9c11c9a7d51f2a9995
 - name: github.com/mattn/go-colorable
