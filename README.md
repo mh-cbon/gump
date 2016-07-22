@@ -122,17 +122,6 @@ VERBOSE=gump gump patch -d
 VERBOSE=* gump patch -d
 ```
 
-## changelog
-
-- 0.1.1: Add more script hooks.
-- 0.1.0: ~~Ensure the new tag is determined after preversion script has run~~
-- 0.0.13: Live output, refactoring
-- 0.0.12: Improved release scripts
-- 0.0.11: Add YAML multiline scripts support. Updated release scripts.
-- 0.0.10: Add `-m` argument, add `!newversion!` and `!tagmessage!` tags.
-- up to 0.0.7: various minor improvements.
-- 0.0.1: Initial release
-
 ## todo
 
 - at some point, probably, move to https://github.com/Masterminds/vcs

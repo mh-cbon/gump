@@ -1,0 +1,168 @@
+
+UNRELEASED
+
+  * vagrantfile: remove useless doc
+  * demo: update .version demo file
+  * tag: add new tag !isprerelease!
+  * semver: updated semver dependency usage
+  * glide: updated dependencies
+  * cli: fix read of message argument
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Fri, 22 Jul 2016 13:05:25 +0200
+
+
+
+0.1.1
+
+  * Added new script hooks
+  * Add new script hooks
+  * Add -C argument to windows cmd invokation
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 25 Jun 2016 16:21:25 +0200
+
+
+
+0.1.0
+
+  * ensure version is determined after tags are fetched
+  * update dependencies
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Tue, 21 Jun 2016 08:48:24 +0200
+
+
+
+0.0.13
+
+  * real time command output
+  * Code refactoring
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 18 Jun 2016 16:08:21 +0200
+
+
+
+0.0.12
+
+  * release scripts
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Thu, 16 Jun 2016 22:16:03 +0200
+
+
+
+0.0.11
+
+  * ensure cwd is passed to string exec
+  * add multiline suport on yaml files
+  * fix version display
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Mon, 13 Jun 2016 21:58:12 +0200
+
+
+
+0.0.10
+
+  * ensure cwd of pre/post scripts
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Mon, 13 Jun 2016 17:59:44 +0200
+
+
+
+0.0.9
+
+  * fix printing of postversion script in dry mode
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Mon, 13 Jun 2016 16:35:56 +0200
+
+
+
+0.0.8
+
+  * add -m argument, add tag placeholder
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Mon, 13 Jun 2016 13:10:48 +0200
+
+
+
+0.0.7
+
+  * vet & fmt
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sun, 12 Jun 2016 17:01:13 +0200
+
+
+
+0.0.6
+
+  * vet & fmt
+  * fix command line
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sun, 12 Jun 2016 16:58:31 +0200
+
+
+
+0.0.5
+
+  * fix command line
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 11 Jun 2016 12:53:43 +0200
+
+
+
+0.0.4
+
+  * fix command line
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 11 Jun 2016 12:27:24 +0200
+
+
+
+0.0.3
+
+  * Ensure the local copy is clean
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 11 Jun 2016 12:23:04 +0200
+
+
+
+0.0.2
+
+  * Empty
+
+-- N/A; Fri, 22 Jul 2016 13:07:16 +0200
+
+
+
+0.0.1
+
+  * Initial release
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 11 Jun 2016 12:19:29 +0200
