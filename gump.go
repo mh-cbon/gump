@@ -134,6 +134,7 @@ Examples
 	}
 }
 
+// Check the vcs is clean, then create new tag according to the given version number
 func applyVersionUpgrade(vcs string, path string, newVersion string, message string) (string, error) {
 	ok, err := repoutils.IsClean(vcs, path)
 	if ok == false {
@@ -213,8 +214,8 @@ func getCommand(arguments map[string]interface{}) string {
 // helper to get the value of the message of the command line
 func getMessage(arguments map[string]interface{}) string {
 	message := ""
-	if mess, ok := arguments["-m"].(string); ok {
-		message = mess
+	if m, ok := arguments["<message>"].(string); ok {
+		message = m
 	}
 	return message
 }
