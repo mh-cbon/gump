@@ -74,10 +74,12 @@ Examples
 	cmd := getCommand(arguments)
 	logger.Println("cmd=" + cmd)
 
+  isPreRelease := isBeta(arguments) || isAlpha(arguments)
+
 	if cmd == "prerelease" || cmd == "patch" || cmd == "minor" || cmd == "major" {
 
 		if hasConfig {
-			executeScript("prebump", conf, path, "", message, isDry)
+			executeScript("prebump", conf, path, "", isPreRelease, message, isDry)
 		}
 
 		newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
@@ -85,16 +87,16 @@ Examples
 		exitWithError(err)
 
 		if hasConfig && cmd == "patch" {
-			executeScript("prepatch", conf, path, newVersion, message, isDry)
+			executeScript("prepatch", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 		if hasConfig && cmd == "minor" {
-			executeScript("preminor", conf, path, newVersion, message, isDry)
+			executeScript("preminor", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 		if hasConfig && cmd == "major" {
-			executeScript("premajor", conf, path, newVersion, message, isDry)
+			executeScript("premajor", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 		if hasConfig {
-			executeScript("preversion", conf, path, newVersion, message, isDry)
+			executeScript("preversion", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 
 		if isDry {
@@ -107,19 +109,19 @@ Examples
 		}
 
 		if hasConfig {
-			executeScript("postversion", conf, path, newVersion, message, isDry)
+			executeScript("postversion", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 		if hasConfig && cmd == "major" {
-			executeScript("postmajor", conf, path, newVersion, message, isDry)
+			executeScript("postmajor", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 		if hasConfig && cmd == "minor" {
-			executeScript("postminor", conf, path, newVersion, message, isDry)
+			executeScript("postminor", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 		if hasConfig && cmd == "patch" {
-			executeScript("postpatch", conf, path, newVersion, message, isDry)
+			executeScript("postpatch", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 		if hasConfig {
-			executeScript("postbump", conf, path, newVersion, message, isDry)
+			executeScript("postbump", conf, path, newVersion, isPreRelease, message, isDry)
 		}
 
 	} else if cmd == "" {
@@ -155,11 +157,20 @@ func applyVersionUpgrade(vcs string, path string, newVersion string, message str
 }
 
 // executes the preversion script of given config if it is not empty
-func executeScript(which string, conf config.Configured, path string, newVersion string, message string, dry bool) {
+func executeScript(which string, conf config.Configured, path string, newVersion string, isPreRelease bool, message string, dry bool) {
 	script := config.GetScript(which, conf)
 	if script != "" {
 		script = strings.Replace(script, "!newversion!", newVersion, -1)
 		script = strings.Replace(script, "!tagmessage!", message, -1)
+    if isPreRelease {
+  		script = strings.Replace(script, "!isprerelease!", "yes", -1)
+  		script = strings.Replace(script, "!isprerelease_int!", "1", -1)
+  		script = strings.Replace(script, "!isprerelease_bool!", "true", -1)
+    } else {
+  		script = strings.Replace(script, "!isprerelease!", "no", -1)
+  		script = strings.Replace(script, "!isprerelease_int!", "0", -1)
+  		script = strings.Replace(script, "!isprerelease_bool!", "false", -1)
+    }
 		if dry {
 			fmt.Println(which + ":" + script)
 		} else {

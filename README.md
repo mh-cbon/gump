@@ -45,9 +45,9 @@ Examples
 
 ## Pre/Post version scripts
 
-Gump can detect, parse and execute pre/post version scripts.
+Gump can detect, parse and execute `pre/post` version scripts.
 
-They are numerous scripts executed in this order :
+They are numerous hooks executed in this order :
 
 - __prebump__ : Runs in first for any type of update, it does not receive `!newversion!` tag.
 It should be used to synchronize your local with remote.
@@ -62,13 +62,21 @@ It should be used to synchronize your local with remote.
 - __postpatch__ : Runs for a `patch` update.
 - __postbump__ : Runs for a any type of update.
 
-If any `pre` script returns an exit code different of `0`, then the execution will stop and the version will remain untouched.
+If any `pre` script returns an exit code different than `0`,
+ the execution will stop and the version will remain untouched.
 
-If `post` script fails, the version has already changed, `gump` will return an exit code = 1.
+If `post` script fails, the version has already changed,
+`gump` will return an exit code = 1.
 
-Scripts can use two special tags
-- `!newversion!` will be replaced by the value of the new version
+Scripts can use few special tags
+- `!newversion!` will be replaced by the value of the new version (not available in `prebump`)
 - `!tagmessage!` will be replaced by the value of the tag message
+- `!isprerelease!` will be replaced by `yes` when `--beta` or `--alpha`
+arguments are present, otherwise it is replaced by the value `no`
+- `!isprerelease_int!` will be replaced by `1` when `--beta` or `--alpha`
+arguments are present, otherwise it is replaced by the value `0`
+- `!isprerelease_bool!` will be replaced by `true` when `--beta` or `--alpha`
+arguments are present, otherwise it is replaced by the value `false`
 
 #### Using a .version file
 
@@ -76,7 +84,8 @@ Drop a file named `.version` on your root such
 
 ```sh
 # demo of .version file
-preversion: git fetch --tags && philea "go vet %s" "go fmt %s"
+prebump: git fetch --tags
+preversion: philea "go vet %s" "go fmt %s"
 postversion: git push && git push --tags \
 # multiline works too
 && echo "and also with comments in the middle"
