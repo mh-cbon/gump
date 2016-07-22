@@ -18,4 +18,3 @@ import:
 - package: github.com/mh-cbon/semver
 - package: gopkg.in/yaml.v2
 - package: github.com/mh-cbon/go-repo-utils
-  version: ^0.0.2
