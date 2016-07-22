@@ -1,5 +1,18 @@
 # Changelog - gump
 
+### 0.1.3
+
+__Changes__
+
+- glide: fix dependencies
+
+__Contributors__
+
+- mh-cbon
+
+Released by mh-cbon, Fri 22 Jul 2016
+______________
+
 ### 0.1.2
 
 __Changes__
