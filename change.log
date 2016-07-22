@@ -1,4 +1,14 @@
 
+0.1.6
+
+  * changelog: fix changelog version 0.0.2, wrong date, wrong releaser
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Fri, 22 Jul 2016 13:38:16 +0200
+
+
+
 0.1.5
 
   * travis: fix build command
@@ -198,3 +208,5 @@
   - mh-cbon <mh-cbon@users.noreply.github.com>
 
 -- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 11 Jun 2016 12:19:29 +0200
+
+
