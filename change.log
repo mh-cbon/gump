@@ -1,4 +1,14 @@
 
+0.1.3
+
+  * glide: fix dependencies
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Fri, 22 Jul 2016 13:23:30 +0200
+
+
+
 0.1.2
 
   * vagrantfile: remove useless doc
