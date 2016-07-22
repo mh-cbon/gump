@@ -1,11 +1,24 @@
 # Changelog - gump
 
+### 0.1.5
+
+__Changes__
+
+- travis: fix build command
+- appveyor: fix build command
+
+__Contributors__
+
+- mh-cbon
+
+Released by mh-cbon, Fri 22 Jul 2016
+______________
+
 ### 0.1.4
 
 __Changes__
 
 - glide: fix dependencies
-- changelog: 0.1.3
 
 __Contributors__
 
