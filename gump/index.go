@@ -49,45 +49,51 @@ func GetMostRecentTag(tags []string) string {
 
 // Create the new version string
 func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (string, error) {
+  var newVersion semver.Version
 	currentVersion, err := semver.NewVersion(mostRecentTag)
 	if err != nil {
 		return "", err
 	}
+
 	if how == "prerelease" {
 		return IncrementPrerelease(currentVersion, beta, alpha)
 	} else if how == "patch" {
-		ok := currentVersion.IncPatch()
-		if ok == false {
-			return "", errors.New("Failed to increment the patch number in " + mostRecentTag)
-		}
+		newVersion = currentVersion.IncPatch()
 
 	} else if how == "minor" {
-		ok := currentVersion.IncMinor()
-		if ok == false {
-			return "", errors.New("Failed to increment the minor number in " + mostRecentTag)
-		}
+		newVersion = currentVersion.IncMinor()
 
 	} else if how == "major" {
-		ok := currentVersion.IncMajor()
-		if ok == false {
-			return "", errors.New("Failed to increment the major number in " + mostRecentTag)
-		}
+		newVersion = currentVersion.IncMajor()
 
-	}
+	} else {
+    return "", errors.New("Unknown verb '"+how+"'")
+  }
 
-	return currentVersion.String(), nil
+	return newVersion.String(), nil
 }
 
 // Given a version, increment it to reach the next prerelease value
 func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) (string, error) {
+  var err error
+  var newVersion semver.Version
 	if currentVersion.Prerelease() == "" {
-		currentVersion.IncPatch()
+		newVersion = currentVersion.IncPatch()
 		if alpha {
-			currentVersion.SetPrerelease("alpha")
+			newVersion, err = newVersion.SetPrerelease("alpha")
+      if err !=nil {
+        return "", err
+      }
 		} else if beta {
-			currentVersion.SetPrerelease("beta")
+			newVersion, err = newVersion.SetPrerelease("beta")
+      if err !=nil {
+        return "", err
+      }
 		} else {
-			currentVersion.SetPrerelease("alpha")
+			newVersion, err = newVersion.SetPrerelease("alpha")
+      if err !=nil {
+        return "", err
+      }
 		}
 	} else {
 		re := regexp.MustCompile(`(alpha|beta)(-?\.?[0-9]+)?`)
@@ -98,10 +104,16 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 			name := parts[0][1]
 			sid := parts[0][2]
 			if name == "alpha" && beta {
-				currentVersion.SetPrerelease("beta")
+				newVersion, err = currentVersion.SetPrerelease("beta")
+        if err !=nil {
+          return "", err
+        }
 			} else if name == "beta" && alpha {
-				currentVersion.IncPatch() // downgrade from beta to alpha not possible without change patch number
-				currentVersion.SetPrerelease("alpha")
+				newVersion = currentVersion.IncPatch() // downgrade from beta to alpha not possible without change patch number
+				newVersion, err = newVersion.SetPrerelease("alpha")
+        if err !=nil {
+          return "", err
+        }
 			} else {
 				d := ""
 				id := 0
@@ -124,12 +136,15 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 				} else {
 					d = ""
 				}
-				currentVersion.SetPrerelease(name + d + strconv.Itoa(id+1))
+				newVersion, err = currentVersion.SetPrerelease(name + d + strconv.Itoa(id+1))
+        if err !=nil {
+          return "", err
+        }
 			}
 		}
 	}
 
-	return currentVersion.String(), nil
+	return newVersion.String(), nil
 }
 
 // Given a path managed by a vcs, create the new version string
