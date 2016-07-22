@@ -49,7 +49,7 @@ func GetMostRecentTag(tags []string) string {
 
 // Create the new version string
 func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (string, error) {
-  var newVersion semver.Version
+	var newVersion semver.Version
 	currentVersion, err := semver.NewVersion(mostRecentTag)
 	if err != nil {
 		return "", err
@@ -67,33 +67,33 @@ func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (s
 		newVersion = currentVersion.IncMajor()
 
 	} else {
-    return "", errors.New("Unknown verb '"+how+"'")
-  }
+		return "", errors.New("Unknown verb '" + how + "'")
+	}
 
 	return newVersion.String(), nil
 }
 
 // Given a version, increment it to reach the next prerelease value
 func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) (string, error) {
-  var err error
-  var newVersion semver.Version
+	var err error
+	var newVersion semver.Version
 	if currentVersion.Prerelease() == "" {
 		newVersion = currentVersion.IncPatch()
 		if alpha {
 			newVersion, err = newVersion.SetPrerelease("alpha")
-      if err !=nil {
-        return "", err
-      }
+			if err != nil {
+				return "", err
+			}
 		} else if beta {
 			newVersion, err = newVersion.SetPrerelease("beta")
-      if err !=nil {
-        return "", err
-      }
+			if err != nil {
+				return "", err
+			}
 		} else {
 			newVersion, err = newVersion.SetPrerelease("alpha")
-      if err !=nil {
-        return "", err
-      }
+			if err != nil {
+				return "", err
+			}
 		}
 	} else {
 		re := regexp.MustCompile(`(alpha|beta)(-?\.?[0-9]+)?`)
@@ -105,15 +105,15 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 			sid := parts[0][2]
 			if name == "alpha" && beta {
 				newVersion, err = currentVersion.SetPrerelease("beta")
-        if err !=nil {
-          return "", err
-        }
+				if err != nil {
+					return "", err
+				}
 			} else if name == "beta" && alpha {
 				newVersion = currentVersion.IncPatch() // downgrade from beta to alpha not possible without change patch number
 				newVersion, err = newVersion.SetPrerelease("alpha")
-        if err !=nil {
-          return "", err
-        }
+				if err != nil {
+					return "", err
+				}
 			} else {
 				d := ""
 				id := 0
@@ -137,9 +137,9 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 					d = ""
 				}
 				newVersion, err = currentVersion.SetPrerelease(name + d + strconv.Itoa(id+1))
-        if err !=nil {
-          return "", err
-        }
+				if err != nil {
+					return "", err
+				}
 			}
 		}
 	}

@@ -74,7 +74,7 @@ Examples
 	cmd := getCommand(arguments)
 	logger.Println("cmd=" + cmd)
 
-  isPreRelease := isBeta(arguments) || isAlpha(arguments)
+	isPreRelease := isBeta(arguments) || isAlpha(arguments)
 
 	if cmd == "prerelease" || cmd == "patch" || cmd == "minor" || cmd == "major" {
 
@@ -162,15 +162,15 @@ func executeScript(which string, conf config.Configured, path string, newVersion
 	if script != "" {
 		script = strings.Replace(script, "!newversion!", newVersion, -1)
 		script = strings.Replace(script, "!tagmessage!", message, -1)
-    if isPreRelease {
-  		script = strings.Replace(script, "!isprerelease!", "yes", -1)
-  		script = strings.Replace(script, "!isprerelease_int!", "1", -1)
-  		script = strings.Replace(script, "!isprerelease_bool!", "true", -1)
-    } else {
-  		script = strings.Replace(script, "!isprerelease!", "no", -1)
-  		script = strings.Replace(script, "!isprerelease_int!", "0", -1)
-  		script = strings.Replace(script, "!isprerelease_bool!", "false", -1)
-    }
+		if isPreRelease {
+			script = strings.Replace(script, "!isprerelease!", "yes", -1)
+			script = strings.Replace(script, "!isprerelease_int!", "1", -1)
+			script = strings.Replace(script, "!isprerelease_bool!", "true", -1)
+		} else {
+			script = strings.Replace(script, "!isprerelease!", "no", -1)
+			script = strings.Replace(script, "!isprerelease_int!", "0", -1)
+			script = strings.Replace(script, "!isprerelease_bool!", "false", -1)
+		}
 		if dry {
 			fmt.Println(which + ":" + script)
 		} else {
