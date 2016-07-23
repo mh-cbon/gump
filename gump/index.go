@@ -52,11 +52,11 @@ func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (s
 	var newVersion semver.Version
 	currentVersion, err := semver.NewVersion(mostRecentTag)
 	if err != nil {
-  	logger.Println("Failed to parse tag=" + mostRecentTag)
+		logger.Println("Failed to parse tag=" + mostRecentTag)
 		return "", err
 	}
 
-  logger.Println("Upgrading version to=" + how)
+	logger.Println("Upgrading version to=" + how)
 
 	if how == "prerelease" {
 		return IncrementPrerelease(currentVersion, beta, alpha)
@@ -109,7 +109,7 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 			sep := parts[0][2]
 			sid := parts[0][3]
 
-      logger.Printf("prerelease parts=%s\n", parts)
+			logger.Printf("prerelease parts=%s\n", parts)
 
 			if name == "alpha" && beta {
 				newVersion, err = currentVersion.SetPrerelease("beta")
@@ -123,14 +123,14 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 					return "", err
 				}
 			} else {
-        if sid == "" {
-          sid = "0"
-        }
-        id, err := strconv.Atoi(sid)
-        if err != nil {
-          logger.Printf("failed to strconv.Atoi x=%s\n", sid)
-          return "", err
-        }
+				if sid == "" {
+					sid = "0"
+				}
+				id, err := strconv.Atoi(sid)
+				if err != nil {
+					logger.Printf("failed to strconv.Atoi x=%s\n", sid)
+					return "", err
+				}
 				newVersion, err = currentVersion.SetPrerelease(name + sep + strconv.Itoa(id+1))
 				if err != nil {
 					return "", err
