@@ -1,4 +1,14 @@
 
+0.1.7
+
+  * gump: fix prerelease update when it has a number
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 23 Jul 2016 14:00:58 +0200
+
+
+
 0.1.6
 
   * changelog: fix changelog version 0.0.2, wrong date, wrong releaser
