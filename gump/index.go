@@ -52,11 +52,15 @@ func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (s
 	var newVersion semver.Version
 	currentVersion, err := semver.NewVersion(mostRecentTag)
 	if err != nil {
+  	logger.Println("Failed to parse tag=" + mostRecentTag)
 		return "", err
 	}
 
+  logger.Println("Upgrading version to=" + how)
+
 	if how == "prerelease" {
 		return IncrementPrerelease(currentVersion, beta, alpha)
+
 	} else if how == "patch" {
 		newVersion = currentVersion.IncPatch()
 
@@ -96,13 +100,17 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 			}
 		}
 	} else {
-		re := regexp.MustCompile(`(alpha|beta)(-?\.?[0-9]+)?`)
+		re := regexp.MustCompile(`(alpha|beta)([-.])?([0-9]+)?`)
 		if re.MatchString(currentVersion.Prerelease()) == false {
 			return "", errors.New("Cannot handle " + currentVersion.Prerelease())
 		} else {
 			parts := re.FindAllStringSubmatch(currentVersion.Prerelease(), -1)
 			name := parts[0][1]
-			sid := parts[0][2]
+			sep := parts[0][2]
+			sid := parts[0][3]
+
+      logger.Printf("prerelease parts=%s\n", parts)
+
 			if name == "alpha" && beta {
 				newVersion, err = currentVersion.SetPrerelease("beta")
 				if err != nil {
@@ -115,28 +123,15 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 					return "", err
 				}
 			} else {
-				d := ""
-				id := 0
-				var err error
-				if sid != "" {
-					p := sid[0:1]
-					if p != "-" && p != "." {
-						d = p
-						id, err = strconv.Atoi(sid[1:])
-						if err != nil {
-							return "", err
-						}
-					} else {
-						d = ""
-						id, err = strconv.Atoi(sid)
-						if err != nil {
-							return "", err
-						}
-					}
-				} else {
-					d = ""
-				}
-				newVersion, err = currentVersion.SetPrerelease(name + d + strconv.Itoa(id+1))
+        if sid == "" {
+          sid = "0"
+        }
+        id, err := strconv.Atoi(sid)
+        if err != nil {
+          logger.Printf("failed to strconv.Atoi x=%s\n", sid)
+          return "", err
+        }
+				newVersion, err = currentVersion.SetPrerelease(name + sep + strconv.Itoa(id+1))
 				if err != nil {
 					return "", err
 				}
@@ -155,9 +150,8 @@ func DetermineTheNewTag(path string, how string, beta bool, alpha bool) (string,
 	}
 
 	mostRecentTag := GetMostRecentTag(tags)
-	newVersion, err := CreateTheNewTag(how, mostRecentTag, beta, alpha)
 
-	return newVersion, err
+	return CreateTheNewTag(how, mostRecentTag, beta, alpha)
 }
 
 // execute a command string on the underlying command system (bash or cmd)
