@@ -1,5 +1,18 @@
 # Changelog - gump
 
+### 0.1.7
+
+__Changes__
+
+- gump: fix prerelease update when it has a number
+
+__Contributors__
+
+- mh-cbon
+
+Released by mh-cbon, Sat 23 Jul 2016
+______________
+
 ### 0.1.6
 
 __Changes__
