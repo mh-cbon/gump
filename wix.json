@@ -22,5 +22,11 @@
       }
     ]
   },
-  "shortcuts": {}
+  "shortcuts": {},
+  "choco": {
+    "description": "Bin util to bump your package using semver",
+    "project-url": "https://github.com/mh-cbon/gump",
+    "tags": "bump",
+    "license-url": "https://github.com/mh-cbon/gump/blob/master/LICENSE"
+  }
 }

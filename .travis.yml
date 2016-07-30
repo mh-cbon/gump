@@ -7,17 +7,20 @@ language: go
 go:
   - tip
 
+env:
+  global:
+    - MYAPP=gump
+    - MYEMAIL=mh-cbon@users.noreply.github.com
+    - secure: mRjSrjYptJnoBc15WbSKSkVe2loD0QeiRBeNnGe/uaTLASi6u7Q5B7TMRmGWlahVt+gEKz7BGnYheL+E1tk1yXi5ArGWXW0Rlm1pXbeP1c3T0cWzoHmuxQU7MyEOWb4xVyY7pEKTK8eSVbX4EqBmLXwK2fx8MK08l9vtGH3dNy9VSfKU06EFGjXKE7/i7nfB+0iYtlxnmjW+d6QR2MAuBh+jMy4ikgOffFFHwc6H7c6aHKcs2bcSOc4kmBSoyJ7pMRPX8CKayGFjURa9rX0P0+w9/G2/yE0qfWRJRVA6PrifS2fHR6ul7OAjLwSsF3lJHv/DeKchlO9yEBRWLvwmHPspHxttj1YPft5o4mb/EdQDgyGZYsQn78Js8Bk/jetplVy49mxu5WZDyOwz50EE7jt2i0/IDMNusjfO5kVTflEuv5k04K3/bNCva0c7W12rfq1lAOxo0lci6zxxNofo5Sh92Hw9daQsI6anJEULNCwl58287s/8urbs/WMCGyF4HsZ8kK5oJb94c3XhoHSpZwT/utmf/FDy/VfjK3Y1sXhtIk/LUVHGfGioLXo2701G5hIeQw9k+7BqLLdYobdTNLElQ/L2qYURmwNSuuWhSpLblXZPXuBqu9l1okKWp5ntB0oALsBGiQbfRLltP6m9d77IgXF2s34Uz9Psap30RlM=
+
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install build-essential lintian -y
   - mkdir -p ${GOPATH}/bin
   - cd ~
   - curl https://glide.sh/get | sh
-  - curl -L https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh | GH=mh-cbon/changelog sh -xe
-  - curl -L https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh | GH=mh-cbon/go-bin-deb sh -xe
 
 install:
-  - cd $GOPATH/src/github.com/mh-cbon/gump
+  - cd $GOPATH/src/github.com/mh-cbon/$MYAPP
   - glide install
   - go install
 
@@ -26,24 +29,25 @@ script: echo "pass"
 before_deploy:
   - mkdir -p build/{386,amd64}
   - mkdir -p pkg-build/{386,amd64}
-  - GOOS=linux GOARCH=386 go build --ldflags "-X main.VERSION=${TRAVIS_TAG}" -o build/386/gump gump.go
-  - GOOS=linux GOARCH=amd64 go build --ldflags "-X main.VERSION=${TRAVIS_TAG}" -o build/amd64/gump gump.go
-  - go-bin-deb generate -a 386 --version ${TRAVIS_TAG} -w pkg-build/386/ -o ${TRAVIS_BUILD_DIR}/gump-386.deb
-  - go-bin-deb generate -a amd64 --version ${TRAVIS_TAG} -w pkg-build/amd64/ -o ${TRAVIS_BUILD_DIR}/gump-amd64.deb
-  - rm -fr pkg-build*/
-  - docker run -v $PWD:/docker fedora /bin/sh -c "cd /docker && sh ./docker.sh ${TRAVIS_TAG} gump"
-  - sudo chown travis:travis gump-{386,amd64}.rpm
+  - GOOS=linux GOARCH=386 go build --ldflags "-X main.VERSION=${TRAVIS_TAG}" -o build/386/$MYAPP gump.go
+  - GOOS=linux GOARCH=amd64 go build --ldflags "-X main.VERSION=${TRAVIS_TAG}" -o build/amd64/$MYAPP gump.go
+  - curl -L https://raw.githubusercontent.com/mh-cbon/go-bin-deb/master/create-pkg.sh | GH=mh-cbon/$MYAPP sh -xe
+  - curl -L https://raw.githubusercontent.com/mh-cbon/go-bin-rpm/master/create-pkg.sh | GH=mh-cbon/$MYAPP sh -xe
 
+after_deploy:
+  - curl -L https://raw.githubusercontent.com/mh-cbon/go-bin-deb/master/setup-repository.sh | GH=mh-cbon/$MYAPP EMAIL=$MYEMAIL sh -xe
+  - curl -L https://raw.githubusercontent.com/mh-cbon/go-bin-rpm/master/setup-repository.sh | GH=mh-cbon/$MYAPP EMAIL=$MYEMAIL sh -xe
 
 deploy:
   provider: releases
   api_key:
     secure: LDIJf5MDzbJ0RScFaxWBjyL6h8jZaHhr0ek7HZ4ubUVlvF+amwysMhK9vdgIb/4HTgLUUUFEIALlvstwGFf/LsLBs0OHZM3EPRY7A6/kt9s/aIJB3sfWSXRf+7ta+UrUeVVzKQxdXtTBT+Hba/hOu68A9vPA/v+h3107XkWng289au1RC41ZhrXbmV8PWb4WTYwt1OWhi+tgyULgsl2k8DG8OXRsVi3RMJEihEUXxcLo3R8GR7nBXZFgnxmuX45/9BuDBaFwEkKamCyidmV8CMZSB1EMSo3a+dcwihwdMpY3mvSUmJMurpNJuB0hY1ge8ANmI7kv8VivKRoc0JO8i4+vrArunUoz1LtNHxrvANfDMesvxW1by7N8S9k87Gym82Lm9VMDP1sXVQ4vvMGONayfzBH3A9I7AIhA80H6yfDtxQnwdLTI9hgYNmGGmhXImOSy5cE87CInPgGzc9BvmXnVTirgt7zyQ6Q6xpfxe37o2H/SrpZzvuzBbvmUGjM1DpWcMJTvu7WjkXVJN76hgRYLhLVl4lWVIeXlaUFqXyMoQCOeD38ryjC8+w8Pa0xnqYWM2QAPueVnl/X86IorbB865ZoF7ygp0O5Ujpxb5JZ8aUeGefo5t8+Dc0Y6c1U9LIGNTVsD16Wzn474ETL1vuNI2D19zGWCfCKG8d8cUxY=
+  file_glob: true
   file:
-    - gump-386.deb
-    - gump-amd64.deb
-    - gump-386.rpm
-    - gump-amd64.rpm
+    - $MYAPP-386.deb
+    - $MYAPP-amd64.deb
+    - $MYAPP-386.rpm
+    - $MYAPP-amd64.rpm
   skip_cleanup: true
   on:
     tags: true
