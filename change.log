@@ -1,4 +1,14 @@
 
+0.1.8
+
+  * packaging: add choco package, add deb/rpm repositories
+
+  - mh-cbon <mh-cbon@users.noreply.github.com>
+
+-- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 30 Jul 2016 03:34:35 +0200
+
+
+
 0.1.7
 
   * gump: fix prerelease update when it has a number
