@@ -1,5 +1,19 @@
 # Changelog - gump
 
+### 0.1.8
+
+__Changes__
+
+- packaging: add choco package, add deb/rpm repositories
+
+__Contributors__
+
+- mh-cbon
+
+Released by mh-cbon, Sat 30 Jul 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.7...0.1.8#diff)
+______________
+
 ### 0.1.7
 
 __Changes__
@@ -10,7 +24,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sat 23 Jul 2016
+Released by mh-cbon, Sat 23 Jul 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.6...0.1.7#diff)
 ______________
 
 ### 0.1.6
@@ -23,7 +38,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Fri 22 Jul 2016
+Released by mh-cbon, Fri 22 Jul 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.5...0.1.6#diff)
 ______________
 
 ### 0.1.5
@@ -37,7 +53,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Fri 22 Jul 2016
+Released by mh-cbon, Fri 22 Jul 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.4...0.1.5#diff)
 ______________
 
 ### 0.1.4
@@ -50,7 +67,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Fri 22 Jul 2016
+Released by mh-cbon, Fri 22 Jul 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.3...0.1.4#diff)
 ______________
 
 ### 0.1.3
@@ -63,7 +81,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Fri 22 Jul 2016
+Released by mh-cbon, Fri 22 Jul 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.2...0.1.3#diff)
 ______________
 
 ### 0.1.2
@@ -81,7 +100,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Fri 22 Jul 2016
+Released by mh-cbon, Fri 22 Jul 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.1...0.1.2#diff)
 ______________
 
 ### 0.1.1
@@ -96,7 +116,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sat 25 Jun 2016
+Released by mh-cbon, Sat 25 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.0...0.1.1#diff)
 ______________
 
 ### 0.1.0
@@ -110,7 +131,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Tue 21 Jun 2016
+Released by mh-cbon, Tue 21 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.13...0.1.0#diff)
 ______________
 
 ### 0.0.13
@@ -124,7 +146,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sat 18 Jun 2016
+Released by mh-cbon, Sat 18 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.12...0.0.13#diff)
 ______________
 
 ### 0.0.12
@@ -137,7 +160,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Thu 16 Jun 2016
+Released by mh-cbon, Thu 16 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.11...0.0.12#diff)
 ______________
 
 ### 0.0.11
@@ -152,7 +176,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Mon 13 Jun 2016
+Released by mh-cbon, Mon 13 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.10...0.0.11#diff)
 ______________
 
 ### 0.0.10
@@ -165,7 +190,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Mon 13 Jun 2016
+Released by mh-cbon, Mon 13 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.9...0.0.10#diff)
 ______________
 
 ### 0.0.9
@@ -178,7 +204,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Mon 13 Jun 2016
+Released by mh-cbon, Mon 13 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.8...0.0.9#diff)
 ______________
 
 ### 0.0.8
@@ -191,7 +218,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Mon 13 Jun 2016
+Released by mh-cbon, Mon 13 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.7...0.0.8#diff)
 ______________
 
 ### 0.0.7
@@ -204,7 +232,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sun 12 Jun 2016
+Released by mh-cbon, Sun 12 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.6...0.0.7#diff)
 ______________
 
 ### 0.0.6
@@ -218,7 +247,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sun 12 Jun 2016
+Released by mh-cbon, Sun 12 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.5...0.0.6#diff)
 ______________
 
 ### 0.0.5
@@ -231,7 +261,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sat 11 Jun 2016
+Released by mh-cbon, Sat 11 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.4...0.0.5#diff)
 ______________
 
 ### 0.0.4
@@ -244,7 +275,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sat 11 Jun 2016
+Released by mh-cbon, Sat 11 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.3...0.0.4#diff)
 ______________
 
 ### 0.0.3
@@ -257,7 +289,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sat 11 Jun 2016
+Released by mh-cbon, Sat 11 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.2...0.0.3#diff)
 ______________
 
 ### 0.0.2
@@ -266,7 +299,8 @@ __Changes__
 
 - Empty
 
-Released by mh-cbon, Sat 11 Jun 2016
+Released by mh-cbon, Sat 11 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.0.1...0.0.2#diff)
 ______________
 
 ### 0.0.1
@@ -279,7 +313,8 @@ __Contributors__
 
 - mh-cbon
 
-Released by mh-cbon, Sat 11 Jun 2016
+Released by mh-cbon, Sat 11 Jun 2016 -
+[see the diff](https://github.com/mh-cbon/gump/compare/f53f111272d6906ef40b655a8a9ca651e48a3b0e...0.0.1#diff)
 ______________
 
 
