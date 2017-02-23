@@ -7,36 +7,49 @@ import (
 	"runtime"
 )
 
-// Return a new exec.Cmd object for the given command string
-func Command(cwd string, cmd string) (*exec.Cmd, error) {
+// Command Return a new exec.Cmd object for the given command string
+func Command(cwd string, cmd string) (*TempCmd, error) {
+	return NewTempCmd(cwd, cmd)
+}
+
+// TempCmd ...
+type TempCmd struct {
+	*exec.Cmd
+	f string
+}
+
+// NewTempCmd ...
+func NewTempCmd(cwd string, cmd string) (*TempCmd, error) {
+	f, err := ioutil.TempDir("", "stringexec")
+	if err != nil {
+		return nil, err
+	}
+	fp := f + "/s"
+	err = ioutil.WriteFile(fp, []byte(cmd), 0766)
+	if err != nil {
+		return nil, err
+	}
+	ret := &TempCmd{Cmd: exec.Command("sh", "-c", fp), f: fp}
 	if runtime.GOOS == "windows" {
-		return ExecStringWindows(cwd, cmd)
+		ret.Cmd = exec.Command("cmd", "/C", fp)
 	}
-	return ExecStringFriendlyUnix(cwd, cmd)
+	ret.Cmd.Dir = cwd
+	ret.Cmd.Stdout = os.Stdout
+	ret.Cmd.Stderr = os.Stderr
+	return ret, nil
 }
 
-func ExecStringWindows(cwd string, cmd string) (*exec.Cmd, error) {
-	dir, err := ioutil.TempDir("", "stringexec")
-	if err != nil {
-		return nil, err
+// Run ...
+func (t *TempCmd) Run() error {
+	if err := t.Cmd.Start(); err != nil {
+		return err
 	}
-	err = ioutil.WriteFile(dir+"/some.bat", []byte(cmd), 0766)
-	if err != nil {
-		return nil, err
-	}
-
-	oCmd := exec.Command("cmd", []string{"/C", dir + "/some.bat"}...)
-	oCmd.Dir = cwd
-	oCmd.Stdout = os.Stdout
-	oCmd.Stderr = os.Stderr
-	// defer os.Remove(tmpfile.Name()) // clean up // not sure how to clean it :x
-	return oCmd, nil
+	return t.Wait()
 }
 
-func ExecStringFriendlyUnix(cwd string, cmd string) (*exec.Cmd, error) {
-	oCmd := exec.Command("sh", []string{"-c", cmd}...)
-	oCmd.Dir = cwd
-	oCmd.Stdout = os.Stdout
-	oCmd.Stderr = os.Stderr
-	return oCmd, nil
+// Wait ...
+func (t *TempCmd) Wait() error {
+	err := t.Cmd.Wait()
+	os.Remove(t.f)
+	return err
 }
