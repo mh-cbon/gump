@@ -292,10 +292,11 @@ func TestGumpWithKoGlideScripts(t *testing.T) {
 
 	dir := "git_test/git_with_ko_glide_scripts"
 	initGitDir(t, dir, "glide.yaml", `scripts:
-    preversion: |
-			eccho "hello" \
-			&& echo "mustnotdisplay1"
-    postversion: eccho "goodbye" && echo "mustnotdisplay2"`)
+  preversion: |
+    eccho "hello" \
+    && echo "mustnotdisplay1"
+  postversion: eccho "goodbye" && echo "mustnotdisplay2"
+`)
 
 	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
 	execOutMustNotContain(t, out, "mustnotdisplay1")
