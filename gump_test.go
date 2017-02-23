@@ -265,11 +265,11 @@ func TestGumpWithKoScripts(t *testing.T) {
 	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
 	s := "mustnotdisplay1"
 	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 	}
 	s = "mustnotdisplay2"
 	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 	}
 
 	tags, err := repoutils.List("git", dir)
@@ -322,11 +322,11 @@ func TestGumpWithKoGlideScripts(t *testing.T) {
 	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
 	s := "mustnotdisplay1"
 	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 	}
 	s = "mustnotdisplay2"
 	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 	}
 
 	tags, err := repoutils.List("git", dir)
@@ -381,11 +381,11 @@ func TestGumpWithKoShScripts(t *testing.T) {
 	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
 	s := "mustnotdisplay1"
 	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 	}
 	s = "mustnotdisplay2"
 	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 	}
 
 	tags, err := repoutils.List("git", dir)
