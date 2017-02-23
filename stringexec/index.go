@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 )
 
@@ -24,7 +25,10 @@ func NewTempCmd(cwd string, cmd string) (*TempCmd, error) {
 	if err != nil {
 		return nil, err
 	}
-	fp := f + "/s"
+	fp := filepath.Join(f, "s")
+	if runtime.GOOS == "windows" {
+		fp += ".bat"
+	}
 	err = ioutil.WriteFile(fp, []byte(cmd), 0766)
 	if err != nil {
 		return nil, err

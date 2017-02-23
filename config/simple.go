@@ -3,6 +3,7 @@ package config
 import (
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
 )
 
@@ -13,13 +14,13 @@ type SimpleConfig struct {
 
 // Exists tells if the default location exists for this configType (.version).
 func (v *SimpleConfig) Exists(wd string) bool {
-	_, err := os.Stat(wd + "/.version")
+	_, err := os.Stat(filepath.Join(wd, ".version"))
 	return !os.IsNotExist(err)
 }
 
 // LoadDefault loads the scripts from a default location (.version)
 func (v *SimpleConfig) LoadDefault(wd string) error {
-	return v.Load(wd + "/.version")
+	return v.Load(filepath.Join(wd, ".version"))
 }
 
 // GetScript returns the content of the named script.

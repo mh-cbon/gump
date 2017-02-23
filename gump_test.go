@@ -54,7 +54,7 @@ func initGitDir(t Errorer, dir, file, script string, tags ...string) {
 	mustExecOk(t, makeCmd(dir, "git", "config", "user.name", "John Doe"))
 	mustExecOk(t, makeCmd(dir, "touch", "tomate"))
 	if file != "" {
-		mustWriteFile(t, dir+"/"+file, script)
+		mustWriteFile(t, filepath.Join(dir, file), script)
 	}
 	mustExecOk(t, makeCmd(dir, "git", "add", "-A"))
 	mustExecOk(t, makeCmd(dir, "git", "commit", "-m", "rev 1"))

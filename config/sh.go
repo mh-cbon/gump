@@ -3,6 +3,7 @@ package config
 import (
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -14,13 +15,13 @@ type ShConfig struct {
 
 // Exists tells if the default location exists for this configType (.version).
 func (v *ShConfig) Exists(wd string) bool {
-	_, err := os.Stat(wd + "/.version.sh")
+	_, err := os.Stat(filepath.Join(wd, ".version.sh"))
 	return !os.IsNotExist(err)
 }
 
 // LoadDefault loads the scripts from a default location (.version)
 func (v *ShConfig) LoadDefault(wd string) error {
-	return v.Load(wd + "/.version.sh")
+	return v.Load(filepath.Join(wd, ".version.sh"))
 }
 
 // GetScript returns the content of the named script.

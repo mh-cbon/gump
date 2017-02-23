@@ -3,6 +3,7 @@ package config
 import (
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -16,13 +17,13 @@ type GlideConfig struct {
 
 // Exists tells if the default location exists for this configType (glide.yaml).
 func (g *GlideConfig) Exists(wd string) bool {
-	_, err := os.Stat(wd + "/glide.yaml")
+	_, err := os.Stat(filepath.Join(wd, "glide.yaml"))
 	return !os.IsNotExist(err)
 }
 
 // LoadDefault loads the scripts from a default location (glide.yaml)
 func (g *GlideConfig) LoadDefault(wd string) error {
-	return g.Load(wd + "/glide.yaml")
+	return g.Load(filepath.Join(wd, "glide.yaml"))
 }
 
 // Script is a struct for the yaml decoding.
