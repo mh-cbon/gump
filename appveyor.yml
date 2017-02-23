@@ -22,10 +22,10 @@ install:
   - curl -fsSL -o C:\latest.bat https://raw.githubusercontent.com/mh-cbon/latest/master/latest.bat?a=1
   - cmd /C C:\latest.bat mh-cbon go-msi amd64
   - set PATH=C:\Program Files\go-msi\;%PATH%
-  - go test -v && go test config/* -v
 
 build_script:
   - glide install
+  - go test -v && go test config/* -v
   - set MYAPP=gump
   - set GOARCH=386
   - go build -o %MYAPP%.exe --ldflags "-X main.VERSION=%APPVEYOR_REPO_TAG_NAME%" gump.go
