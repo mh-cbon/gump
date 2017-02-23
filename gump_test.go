@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/mh-cbon/go-repo-utils/repoutils"
@@ -233,13 +234,17 @@ func TestGumpWithOkVersionScripts(t *testing.T) {
   postversion: echo "goodbye"`)
 
 	out := mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	expect := `hello
-
-Created new tag 0.0.1-beta
-goodbye
-`
-	if out != expect {
-		t.Errorf("Output does not match expected=\n%q\ngot=%q\n", expect, out)
+	s := "hello"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
+	}
+	s = "Created new tag 0.0.1-beta"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
+	}
+	s = "goodbye"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
 	}
 
 	tags, err := repoutils.List("git", dir)
@@ -275,13 +280,17 @@ func TestGumpWithOkGlideScripts(t *testing.T) {
     postversion: echo "goodbye"`)
 
 	out := mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	expect := `hello
-
-Created new tag 0.0.1-beta
-goodbye
-`
-	if out != expect {
-		t.Errorf("Output does not match expected=\n%q\ngot=%q\n", expect, out)
+	s := "hello"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
+	}
+	s = "Created new tag 0.0.1-beta"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
+	}
+	s = "goodbye"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
 	}
 
 	tags, err := repoutils.List("git", dir)
@@ -319,13 +328,17 @@ func TestGumpWithOkShScripts(t *testing.T) {
       echo "goodbye"`)
 
 	out := mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	expect := `hello
-
-Created new tag 0.0.1-beta
-goodbye
-`
-	if out != expect {
-		t.Errorf("Output does not match expected=\n%q\ngot=%q\n", expect, out)
+	s := "hello"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
+	}
+	s = "Created new tag 0.0.1-beta"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
+	}
+	s = "goodbye"
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n", s)
 	}
 
 	tags, err := repoutils.List("git", dir)
