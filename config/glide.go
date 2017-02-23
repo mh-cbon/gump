@@ -1,17 +1,31 @@
 package config
 
 import (
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
-// Config is the top-level configuration object.
+// GlideConfig can read and load a glide.yaml script node.
 type GlideConfig struct {
 	Scripts Script `yaml:"scripts"`
 }
 
+// Exists tells if the default location exists for this configType (glide.yaml).
+func (g *GlideConfig) Exists(wd string) bool {
+	_, err := os.Stat(wd + "/glide.yaml")
+	return !os.IsNotExist(err)
+}
+
+// LoadDefault loads the scripts from a default location (glide.yaml)
+func (g *GlideConfig) LoadDefault(wd string) error {
+	return g.Load(wd + "/glide.yaml")
+}
+
+// Script is a struct for the yaml decoding.
 type Script struct {
 	PreBump     string `yaml:"prebump"`
 	PrePatch    string `yaml:"prepatch"`
@@ -45,52 +59,29 @@ func parseScript(s string) string {
 	return strings.TrimRight(strings.TrimRight(s, " "), "\n")
 }
 
-// GetPreBump returns the content of scripts.prebump field
-func (g *GlideConfig) GetPreBump() string {
-	return parseScript(g.Scripts.PreBump)
-}
-
-// GetPrePatch returns the content of scripts.prepatch field
-func (g *GlideConfig) GetPrePatch() string {
-	return parseScript(g.Scripts.PrePatch)
-}
-
-// GetPreMinor returns the content of scripts.preminor field
-func (g *GlideConfig) GetPreMinor() string {
-	return parseScript(g.Scripts.PreMinor)
-}
-
-// GetPreMajor returns the content of scripts.premajor field
-func (g *GlideConfig) GetPreMajor() string {
-	return parseScript(g.Scripts.PreMajor)
-}
-
-// GetPreVersion returns the content of scripts.preversion field
-func (g *GlideConfig) GetPreVersion() string {
-	return parseScript(g.Scripts.PreVersion)
-}
-
-// GetPostVersion returns the content of scripts.postversion field
-func (g *GlideConfig) GetPostVersion() string {
-	return parseScript(g.Scripts.PostVersion)
-}
-
-// GetPostMajor returns the content of scripts.postmajor field
-func (g *GlideConfig) GetPostMajor() string {
-	return parseScript(g.Scripts.PostMajor)
-}
-
-// GetPostMinor returns the content of scripts.postminor field
-func (g *GlideConfig) GetPostMinor() string {
-	return parseScript(g.Scripts.PostMinor)
-}
-
-// GetPostPatch returns the content of scripts.postpatch field
-func (g *GlideConfig) GetPostPatch() string {
-	return parseScript(g.Scripts.PostPatch)
-}
-
-// GetPostBump returns the content of scripts.postbump field
-func (g *GlideConfig) GetPostBump() string {
-	return parseScript(g.Scripts.PostBump)
+// GetScript returns the content of the named script.
+func (g *GlideConfig) GetScript(name string) (string, bool) {
+	switch name {
+	case "prebump":
+		return parseScript(g.Scripts.PreBump), true
+	case "prepatch":
+		return parseScript(g.Scripts.PrePatch), true
+	case "preminor":
+		return parseScript(g.Scripts.PreMinor), true
+	case "premajor":
+		return parseScript(g.Scripts.PreMajor), true
+	case "preversion":
+		return parseScript(g.Scripts.PreVersion), true
+	case "postversion":
+		return parseScript(g.Scripts.PostVersion), true
+	case "postmajor":
+		return parseScript(g.Scripts.PostMajor), true
+	case "postminor":
+		return parseScript(g.Scripts.PostMinor), true
+	case "postpatch":
+		return parseScript(g.Scripts.PostPatch), true
+	case "postbump":
+		return parseScript(g.Scripts.PostBump), true
+	}
+	return "", false
 }

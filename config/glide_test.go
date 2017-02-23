@@ -1,40 +1,34 @@
 package config
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestEmptyYamlFile(t *testing.T) {
-	s := GlideConfig{}
+	s := &GlideConfig{}
 	s.Parse([]byte(""))
-	expected := ""
-	if s.GetPreVersion() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPreVersion())
-	}
-	if s.GetPostVersion() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPostVersion())
-	}
+	expects := map[string]string{}
+	expects["preversion"] = ""
+	expects["postversion"] = ""
+	checkTable(t, expects, s)
 }
 
 func TestYamlFile(t *testing.T) {
-	s := GlideConfig{}
+	s := &GlideConfig{}
 	s.Parse([]byte(`
 scripts:
   preversion: some
   postversion: else
 `))
-	expected := "some"
-	if s.GetPreVersion() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPreVersion())
-	}
-	expected = "else"
-	if s.GetPostVersion() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPostVersion())
-	}
+	expects := map[string]string{}
+	expects["preversion"] = "some"
+	expects["postversion"] = "else"
+	checkTable(t, expects, s)
 }
 
 func TestYamlFileMultiline(t *testing.T) {
-	s := GlideConfig{}
+	s := &GlideConfig{}
 	s.Parse([]byte(`
 scripts:
   preversion: |
@@ -44,69 +38,37 @@ scripts:
     else \
       otherwise
 `))
-	expected := "some thing"
-	if s.GetPreVersion() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPreVersion())
-	}
-	expected = "else   otherwise"
-	if s.GetPostVersion() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPostVersion())
-	}
+	expects := map[string]string{}
+	expects["preversion"] = "some thing"
+	expects["postversion"] = "else   otherwise"
+	checkTable(t, expects, s)
 }
 
-func TestAllFields(t *testing.T) {
-	s := GlideConfig{}
-	s.Parse([]byte(`
-scripts:
-  prebump: prebump
-  prepatch: prepatch
-  preminor: preminor
-  premajor: premajor
-  preversion: preversion
-  postversion: postversion
-  postmajor: postmajor
-  postminor: postminor
-  postpatch: postpatch
-  postbump: postbump
-`))
-	expected := "prebump"
-	if s.GetPreBump() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPreBump())
+func TestAllFieldsGlide(t *testing.T) {
+	a := []string{
+		"prebump",
+		"prepatch",
+		"preminor",
+		"premajor",
+		"preversion",
+		"postversion",
+		"postmajor",
+		"postminor",
+		"postpatch",
+		"postbump",
 	}
-	expected = "prepatch"
-	if s.GetPrePatch() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPrePatch())
+	scriptStr := "\nscripts:\n"
+	for _, phase := range a {
+		scriptStr += fmt.Sprintf("  %v: %v\n", phase, phase)
 	}
-	expected = "preminor"
-	if s.GetPreMinor() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPreMinor())
+	scriptStr += "\n"
+
+	s := &GlideConfig{}
+	s.Parse([]byte(scriptStr))
+
+	expects := map[string]string{}
+	for _, phase := range a {
+		expects[phase] = phase
 	}
-	expected = "premajor"
-	if s.GetPreMajor() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPreMajor())
-	}
-	expected = "preversion"
-	if s.GetPreVersion() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPreVersion())
-	}
-	expected = "postversion"
-	if s.GetPostVersion() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPostVersion())
-	}
-	expected = "postmajor"
-	if s.GetPostMajor() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPostMajor())
-	}
-	expected = "postminor"
-	if s.GetPostMinor() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPostMinor())
-	}
-	expected = "postpatch"
-	if s.GetPostPatch() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPostPatch())
-	}
-	expected = "postbump"
-	if s.GetPostBump() != expected {
-		t.Errorf("Expected %q got %q\n", expected, s.GetPostBump())
-	}
+	checkTable(t, expects, s)
 }
