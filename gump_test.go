@@ -369,7 +369,7 @@ func execOutMustNotContain(t *testing.T, out string, s string) bool {
 	if !isWindows && strings.Index(out, s) > -1 {
 		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 		return false
-	} else if isWindows && strings.Index(out, "An has error occured while executing") > -1 {
+	} else if isWindows && strings.Index(out, "An has error occured while executing") == -1 {
 		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 		return false
 	}
