@@ -27,27 +27,47 @@ func prepareCommand(cmd string, isWindows bool) string {
 	ret := ""
 	lineEnding := regexp.MustCompile("\r\n|\n")
 	continueStart := regexp.MustCompile(`^\s*&&\s*`)
+	continueEnd := regexp.MustCompile(`[\\]\s*$`)
 	lines := lineEnding.Split(cmd, -1)
-	for i, line := range lines {
-		if i == 0 {
-			if !isWindows && !strings.HasSuffix(line, "\\") {
-				line += " \\"
+
+	if isWindows {
+		for _, line := range lines {
+			if continueEnd.MatchString(line) {
+				line = continueEnd.ReplaceAllString(line, "")
+			} else {
+				line += " && "
 			}
-		} else {
-			if !continueStart.MatchString(line) {
-				line = " && " + line
-			}
-			if !isWindows && !strings.HasSuffix(line, "\\") {
-				line += " \\"
-			}
+			ret += strings.TrimSpace(line) + " "
 		}
-		if !isWindows || strings.HasSuffix(line, "\\") {
+		ret = strings.TrimSpace(ret)
+		if strings.HasSuffix(ret, " &&") {
+			ret = ret[0 : len(ret)-3]
+		}
+	} else {
+		isContinuing := false
+		for i, line := range lines {
+			if i == 0 {
+				isContinuing = false
+				if !continueEnd.MatchString(line) {
+					line += " \\"
+					isContinuing = true
+				}
+			} else {
+				if isContinuing && !continueStart.MatchString(line) {
+					line = " && " + line
+				}
+				isContinuing = false
+				if !continueEnd.MatchString(line) {
+					line += " \\"
+					isContinuing = true
+				}
+			}
 			line += "\n"
+			ret += line
 		}
-		ret += line
-	}
-	if !isWindows && len(ret) > 3 {
-		ret = ret[0 : len(ret)-3]
+		if len(ret) > 3 {
+			ret = ret[0 : len(ret)-3]
+		}
 	}
 	return ret
 }
