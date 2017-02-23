@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -16,7 +15,14 @@ import (
 
 var logger = verbose.Auto()
 
+// VERSION contains the build version number.
 var VERSION = "0.0.0"
+
+var bumpPatch = "patch"
+var bumpMinor = "minor"
+var bumpMajor = "major"
+var bumpPrerelease = "prerelease"
+var bumps = []string{bumpPatch, bumpMinor, bumpMajor}
 
 func main() {
 
@@ -65,75 +71,63 @@ Examples
 		exitWithError(errors.New("Sorry ! Subversion is not supported !"))
 	}
 
-	hasConfig := config.Exists(path)
-	conf, err := config.Load(path)
-	if hasConfig {
+	finder := config.NewFinder()
+
+	conf, err := finder.Load(path)
+	if conf != nil {
 		exitWithError(err)
 	}
 
 	cmd := getCommand(arguments)
 	logger.Println("cmd=" + cmd)
-
-	isPreRelease := isBeta(arguments) || isAlpha(arguments)
-
-	if cmd == "prerelease" || cmd == "patch" || cmd == "minor" || cmd == "major" {
-
-		if hasConfig {
-			executeScript("prebump", conf, path, "", isPreRelease, message, isDry)
-		}
-
-		newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
-		logger.Println("newVersion=" + newVersion)
-		exitWithError(err)
-
-		if hasConfig && cmd == "patch" {
-			executeScript("prepatch", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-		if hasConfig && cmd == "minor" {
-			executeScript("preminor", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-		if hasConfig && cmd == "major" {
-			executeScript("premajor", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-		if hasConfig {
-			executeScript("preversion", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-
-		if isDry {
-			fmt.Println("The new tag to create is: " + newVersion)
-		} else {
-			out, err := applyVersionUpgrade(vcs, path, newVersion, message)
-			fmt.Println(out)
-			exitWithError(err)
-			fmt.Println("Created new tag " + newVersion)
-		}
-
-		if hasConfig {
-			executeScript("postversion", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-		if hasConfig && cmd == "major" {
-			executeScript("postmajor", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-		if hasConfig && cmd == "minor" {
-			executeScript("postminor", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-		if hasConfig && cmd == "patch" {
-			executeScript("postpatch", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-		if hasConfig {
-			executeScript("postbump", conf, path, newVersion, isPreRelease, message, isDry)
-		}
-
-	} else if cmd == "" {
+	if cmd != bumpPrerelease && cmd != bumpPatch && cmd != bumpMinor && cmd != bumpMajor {
 		fmt.Println("Wrong usage: Missing command")
 		fmt.Println("")
 		fmt.Println(usage)
 		os.Exit(1)
-
-	} else {
-		log.Println("Unknown command: '" + cmd + "'")
-		os.Exit(1)
 	}
+
+	isPreRelease := isBeta(arguments) || isAlpha(arguments)
+
+	// prebump: sync the repo
+	executeScript("prebump", conf, path, "", isPreRelease, message, isDry)
+
+	// determine the next version
+	newVersion, err := gump.DetermineTheNewTag(path, cmd, isBeta(arguments), isAlpha(arguments))
+	logger.Println("newVersion=" + newVersion)
+	exitWithError(err)
+
+	// execute one of pre{patch,minor,major}
+	for _, bump := range bumps {
+		if bump == cmd {
+			executeScript("pre"+bump, conf, path, newVersion, isPreRelease, message, isDry)
+		}
+	}
+	// execute preversion, always
+	executeScript("preversion", conf, path, newVersion, isPreRelease, message, isDry)
+
+	// create the new tag
+	if isDry {
+		fmt.Println("The new tag to create is: " + newVersion)
+	} else {
+		out, err := applyVersionUpgrade(vcs, path, newVersion, message)
+		fmt.Println(out)
+		exitWithError(err)
+		fmt.Println("Created new tag " + newVersion)
+	}
+
+	// execute postversion, always
+	executeScript("postversion", conf, path, newVersion, isPreRelease, message, isDry)
+
+	// execute one of post{patch,minor,major}
+	for _, bump := range bumps {
+		if bump == cmd {
+			executeScript("post"+bump, conf, path, newVersion, isPreRelease, message, isDry)
+		}
+	}
+
+	// execute postbump, always
+	executeScript("postbump", conf, path, newVersion, isPreRelease, message, isDry)
 }
 
 // Check the vcs is clean, then create new tag according to the given version number
@@ -158,28 +152,30 @@ func applyVersionUpgrade(vcs string, path string, newVersion string, message str
 
 // executes the preversion script of given config if it is not empty
 func executeScript(which string, conf config.Configured, path string, newVersion string, isPreRelease bool, message string, dry bool) {
-	script := config.GetScript(which, conf)
-	if script != "" {
-		script = strings.Replace(script, "!newversion!", newVersion, -1)
-		script = strings.Replace(script, "!tagmessage!", message, -1)
-		if isPreRelease {
-			script = strings.Replace(script, "!isprerelease!", "yes", -1)
-			script = strings.Replace(script, "!isprerelease_int!", "1", -1)
-			script = strings.Replace(script, "!isprerelease_bool!", "true", -1)
-		} else {
-			script = strings.Replace(script, "!isprerelease!", "no", -1)
-			script = strings.Replace(script, "!isprerelease_int!", "0", -1)
-			script = strings.Replace(script, "!isprerelease_bool!", "false", -1)
-		}
-		if dry {
-			fmt.Println(which + ":" + script)
-		} else {
-			logger.Println(which + "=" + script)
-			err := gump.ExecScript(path, script)
-			if err != nil {
-				fmt.Println("An has error occured while executing " + which + " script!")
+	if conf != nil {
+		script, _ := conf.GetScript(which)
+		if script != "" {
+			script = strings.Replace(script, "!newversion!", newVersion, -1)
+			script = strings.Replace(script, "!tagmessage!", message, -1)
+			if isPreRelease {
+				script = strings.Replace(script, "!isprerelease!", "yes", -1)
+				script = strings.Replace(script, "!isprerelease_int!", "1", -1)
+				script = strings.Replace(script, "!isprerelease_bool!", "true", -1)
+			} else {
+				script = strings.Replace(script, "!isprerelease!", "no", -1)
+				script = strings.Replace(script, "!isprerelease_int!", "0", -1)
+				script = strings.Replace(script, "!isprerelease_bool!", "false", -1)
 			}
-			exitWithError(err)
+			if dry {
+				fmt.Println(which + ":" + script)
+			} else {
+				logger.Println(which + "=" + script)
+				err := gump.ExecScript(path, script)
+				if err != nil {
+					fmt.Println("An has error occured while executing " + which + " script!")
+				}
+				exitWithError(err)
+			}
 		}
 	}
 }
@@ -195,28 +191,12 @@ func exitWithError(err error) {
 
 // helper to get the next type of desired version
 func getCommand(arguments map[string]interface{}) string {
-	p, ok := arguments["patch"]
-	if ok {
-		if b, ok := p.(bool); ok && b {
-			return "patch"
-		}
-	}
-	p, ok = arguments["minor"]
-	if ok {
-		if b, ok := p.(bool); ok && b {
-			return "minor"
-		}
-	}
-	p, ok = arguments["major"]
-	if ok {
-		if b, ok := p.(bool); ok && b {
-			return "major"
-		}
-	}
-	p, ok = arguments["prerelease"]
-	if ok {
-		if b, ok := p.(bool); ok && b {
-			return "prerelease"
+	x := []string{bumpPatch, bumpMinor, bumpMajor, bumpPrerelease}
+	for _, v := range x {
+		if p, ok := arguments[v]; ok {
+			if b, ok := p.(bool); ok && b {
+				return v
+			}
 		}
 	}
 	return ""

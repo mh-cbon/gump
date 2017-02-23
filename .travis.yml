@@ -24,7 +24,7 @@ install:
   - glide install
   - go install
 
-script: echo "pass"
+script: go test -v && go test config/* -v
 
 before_deploy:
   - mkdir -p build/{386,amd64}
