@@ -13,7 +13,7 @@ import (
 
 var logger = verbose.Auto()
 
-// return the list of tags registered in the underlying vcs
+// GetTags return the list of tags contained in the underlying vcs
 func GetTags(path string) ([]string, error) {
 	vcs, err := repoutils.WhichVcs(path)
 	logger.Println("vcs=" + vcs)
@@ -32,8 +32,8 @@ func GetTags(path string) ([]string, error) {
 	return tags, nil
 }
 
-// returns the most recent tag, could be prerelease,
-// registered in the underlying vcs
+// GetMostRecentTag returns the most recent tag, could be prerelease,
+// contained in the underlying vcs
 func GetMostRecentTag(tags []string) string {
 	mostRecentTag := ""
 	if len(tags) > 0 {
@@ -47,7 +47,7 @@ func GetMostRecentTag(tags []string) string {
 	return mostRecentTag
 }
 
-// Create the new version string
+// CreateTheNewTag Create the new version string
 func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (string, error) {
 	var newVersion semver.Version
 	currentVersion, err := semver.NewVersion(mostRecentTag)
@@ -77,7 +77,7 @@ func CreateTheNewTag(how string, mostRecentTag string, beta bool, alpha bool) (s
 	return newVersion.String(), nil
 }
 
-// Given a version, increment it to reach the next prerelease value
+// IncrementPrerelease Given a version, increment it to reach the next prerelease value
 func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) (string, error) {
 	var err error
 	var newVersion semver.Version
@@ -103,38 +103,38 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 		re := regexp.MustCompile(`(alpha|beta)([-.])?([0-9]+)?`)
 		if re.MatchString(currentVersion.Prerelease()) == false {
 			return "", errors.New("Cannot handle " + currentVersion.Prerelease())
+		}
+
+		parts := re.FindAllStringSubmatch(currentVersion.Prerelease(), -1)
+		name := parts[0][1]
+		sep := parts[0][2]
+		sid := parts[0][3]
+
+		logger.Printf("prerelease parts=%s\n", parts)
+
+		if name == "alpha" && beta {
+			newVersion, err = currentVersion.SetPrerelease("beta")
+			if err != nil {
+				return "", err
+			}
+		} else if name == "beta" && alpha {
+			newVersion = currentVersion.IncPatch() // downgrade from beta to alpha not possible without change patch number
+			newVersion, err = newVersion.SetPrerelease("alpha")
+			if err != nil {
+				return "", err
+			}
 		} else {
-			parts := re.FindAllStringSubmatch(currentVersion.Prerelease(), -1)
-			name := parts[0][1]
-			sep := parts[0][2]
-			sid := parts[0][3]
-
-			logger.Printf("prerelease parts=%s\n", parts)
-
-			if name == "alpha" && beta {
-				newVersion, err = currentVersion.SetPrerelease("beta")
-				if err != nil {
-					return "", err
-				}
-			} else if name == "beta" && alpha {
-				newVersion = currentVersion.IncPatch() // downgrade from beta to alpha not possible without change patch number
-				newVersion, err = newVersion.SetPrerelease("alpha")
-				if err != nil {
-					return "", err
-				}
-			} else {
-				if sid == "" {
-					sid = "0"
-				}
-				id, err := strconv.Atoi(sid)
-				if err != nil {
-					logger.Printf("failed to strconv.Atoi x=%s\n", sid)
-					return "", err
-				}
-				newVersion, err = currentVersion.SetPrerelease(name + sep + strconv.Itoa(id+1))
-				if err != nil {
-					return "", err
-				}
+			if sid == "" {
+				sid = "0"
+			}
+			id, err := strconv.Atoi(sid)
+			if err != nil {
+				logger.Printf("failed to strconv.Atoi x=%s\n", sid)
+				return "", err
+			}
+			newVersion, err = currentVersion.SetPrerelease(name + sep + strconv.Itoa(id+1))
+			if err != nil {
+				return "", err
 			}
 		}
 	}
@@ -142,7 +142,7 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 	return newVersion.String(), nil
 }
 
-// Given a path managed by a vcs, create the new version string
+// DetermineTheNewTag Given a path managed by a vcs, create the new version string
 func DetermineTheNewTag(path string, how string, beta bool, alpha bool) (string, error) {
 	tags, err := GetTags(path)
 	if err != nil {
@@ -154,7 +154,7 @@ func DetermineTheNewTag(path string, how string, beta bool, alpha bool) (string,
 	return CreateTheNewTag(how, mostRecentTag, beta, alpha)
 }
 
-// execute a command string on the underlying command system (bash or cmd)
+// ExecScript execute a command string on the underlying command system (bash or cmd)
 func ExecScript(cwd string, script string) error {
 	cmd, err := stringexec.Command(cwd, script)
 	if err != nil {
