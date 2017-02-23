@@ -1,0 +1,7 @@
+scripts:
+  preversion: |
+    echo "hello" \
+    && echo "how are you ?"
+  postversion: |
+    echo "I m fine"
+    && echo "goodbye"
