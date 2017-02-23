@@ -14,6 +14,8 @@ import (
 	"github.com/mh-cbon/go-repo-utils/repoutils"
 )
 
+var isWindows = runtime.GOOS == "windows"
+
 type TestingStub struct{}
 
 func (t *TestingStub) Errorf(s string, a ...interface{}) {
@@ -234,18 +236,9 @@ func TestGumpWithOkVersionScripts(t *testing.T) {
   postversion: echo "goodbye"`)
 
 	out := mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	s := "hello"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
-	s = "Created new tag 0.0.1-beta"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
-	s = "goodbye"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
+	execOutMustContain(t, out, "hello")
+	execOutMustContain(t, out, "Created new tag 0.0.1-beta")
+	execOutMustContain(t, out, "goodbye")
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -263,14 +256,8 @@ func TestGumpWithKoScripts(t *testing.T) {
   postversion: eccho "goodbye" && echo "mustnotdisplay2"`)
 
 	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	s := "mustnotdisplay1"
-	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
-	}
-	s = "mustnotdisplay2"
-	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
-	}
+	execOutMustNotContain(t, out, "mustnotdisplay1")
+	execOutMustNotContain(t, out, "mustnotdisplay2")
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -289,18 +276,9 @@ func TestGumpWithOkGlideScripts(t *testing.T) {
     postversion: echo "goodbye"`)
 
 	out := mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	s := "hello"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
-	s = "Created new tag 0.0.1-beta"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
-	s = "goodbye"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
+	execOutMustContain(t, out, "hello")
+	execOutMustContain(t, out, "Created new tag 0.0.1-beta")
+	execOutMustContain(t, out, "goodbye")
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -320,14 +298,8 @@ func TestGumpWithKoGlideScripts(t *testing.T) {
     postversion: eccho "goodbye" && echo "mustnotdisplay2"`)
 
 	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	s := "mustnotdisplay1"
-	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
-	}
-	s = "mustnotdisplay2"
-	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
-	}
+	execOutMustNotContain(t, out, "mustnotdisplay1")
+	execOutMustNotContain(t, out, "mustnotdisplay2")
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -347,18 +319,9 @@ func TestGumpWithOkShScripts(t *testing.T) {
       echo "goodbye"`)
 
 	out := mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	s := "hello"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
-	s = "Created new tag 0.0.1-beta"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
-	s = "goodbye"
-	if strings.Index(out, s) == -1 {
-		t.Errorf("Output does not match expected to contain %q\n", s)
-	}
+	execOutMustContain(t, out, "hello")
+	execOutMustContain(t, out, "Created new tag 0.0.1-beta")
+	execOutMustContain(t, out, "goodbye")
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -379,14 +342,8 @@ func TestGumpWithKoShScripts(t *testing.T) {
 		echo "mustnotdisplay2"`)
 
 	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	s := "mustnotdisplay1"
-	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
-	}
-	s = "mustnotdisplay2"
-	if strings.Index(out, s) > -1 {
-		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
-	}
+	execOutMustNotContain(t, out, "mustnotdisplay1")
+	execOutMustNotContain(t, out, "mustnotdisplay2")
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -398,6 +355,25 @@ func TestGumpWithKoShScripts(t *testing.T) {
 
 type Errorer interface {
 	Errorf(string, ...interface{})
+}
+
+func execOutMustContain(t *testing.T, out string, s string) bool {
+	if strings.Index(out, s) == -1 {
+		t.Errorf("Output does not match expected to contain %q\n%v\n", s, out)
+		return false
+	}
+	return true
+}
+
+func execOutMustNotContain(t *testing.T, out string, s string) bool {
+	if !isWindows && strings.Index(out, s) > -1 {
+		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
+		return false
+	} else if isWindows && strings.Index(out, "An has error occured while executing") > -1 {
+		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
+		return false
+	}
+	return true
 }
 
 func mustExecOk(t Errorer, cmd *exec.Cmd) string {
