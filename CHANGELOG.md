@@ -1,5 +1,45 @@
 # Changelog - gump
 
+### 0.1.9
+
+__Changes__
+
+- sh script(fix): exit on first command failure
+- README: 0.1.9
+- windows: fix tests for windows
+- windows: fix tests for windows
+- windows: fix tests for windows
+- windows: ensure path are forged properly
+- appveyor: fix ci script
+- bump: improve bump script
+- gump(improve): dry output is more readable
+- sh(fix): ensure bump phase name are lower case
+- README update
+- bump: lint
+- README: emd
+- test: added comments
+- package: add doc
+- dependencies update: fix bug with newer semver which would not work with prerelease upgrade as before
+- travis(speed): don t use tip to fasten test execution
+- gump(break): code lint, add support for .version.sh file format, improved test to run anywhere, updated CI to run tests, moved bump scripts to .version.sh file, add a demo glide file
+- gump(break): code lint, add support for .version.sh file format, improved test to run anywhere, updated CI to run tests, moved bump scripts to .version.sh file, add a demo glide file
+- config(break): code refactoring to use plugin oriented architecture, code linting, test refactoring, add a new config format for .version.sh file
+- update script to use some variable
+- update to go1.8
+- stringexec: bash always use a tempfile, the tempfile is correctly deleted after wait(), handles multiline script
+- lint
+- appveyor: update choco key
+- README
+- changelog: 0.1.8
+
+__Contributors__
+
+- mh-cbon
+
+Released by mh-cbon, Thu 23 Feb 2017 -
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.8...0.1.9#diff)
+______________
+
 ### 0.1.8
 
 __Changes__
