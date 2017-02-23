@@ -110,7 +110,7 @@ Examples
 
 	// create the new tag
 	if isDry {
-		fmt.Println("The new tag to create is: " + newVersion)
+		fmt.Println("The new tag to create is: " + newVersion + "\n")
 	} else {
 		out, err := applyVersionUpgrade(vcs, path, newVersion, message)
 		fmt.Println(out)
@@ -169,9 +169,9 @@ func executeScript(which string, conf config.Configured, path string, newVersion
 				script = strings.Replace(script, "!isprerelease_bool!", "false", -1)
 			}
 			if dry {
-				fmt.Println(which + ":" + script)
+				fmt.Println(which + ":\n" + script + "\n")
 			} else {
-				logger.Println(which + "=" + script)
+				logger.Println(which + ":\n" + script + "\n")
 				err := gump.ExecScript(path, script)
 				if err != nil {
 					fmt.Println("An has error occured while executing " + which + " script!")
