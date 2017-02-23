@@ -210,17 +210,17 @@ func TestGumpIncPatchWithMessage(t *testing.T) {
 	dir := "git_test/git"
 	initGitDir(t, dir, "", "", "notsemvertag", "v1.0.2", "v1.0.0")
 
-	mustExecOk(tt, makeCmd(dir, gumpPath, "major"))
-	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-a"))
-	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-a"))
-	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
-	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-a"))
-	mustExecOk(tt, makeCmd(dir, gumpPath, "patch", "-m", "message"))
+	mustExecOk(tt, makeCmd(dir, gumpPath, "major"))                  // 2.0.0
+	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-a"))       // 2.0.0-alpha
+	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-a"))       // 2.0.0-alpha1
+	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))       // 2.0.0-beta
+	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))       // 2.0.0-beta1
+	mustExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-a"))       // 2.0.1-alpha
+	mustExecOk(tt, makeCmd(dir, gumpPath, "patch", "-m", "message")) // 2.0.2
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
-	mustContain(tt, tags, "2.0.3")
+	mustContain(tt, tags, "2.0.2")
 
 	mustNotErr(t, os.RemoveAll(dir))
 }
