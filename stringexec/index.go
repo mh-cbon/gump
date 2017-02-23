@@ -5,7 +5,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
+	"strings"
 )
 
 // Command Return a new exec.Cmd object for the given command string
@@ -19,6 +21,37 @@ type TempCmd struct {
 	f string
 }
 
+var isWindows = runtime.GOOS == "windows"
+
+func prepareCommand(cmd string, isWindows bool) string {
+	ret := ""
+	lineEnding := regexp.MustCompile("\r\n|\n")
+	continueStart := regexp.MustCompile(`^\s*&&\s*`)
+	lines := lineEnding.Split(cmd, -1)
+	for i, line := range lines {
+		if i == 0 {
+			if !isWindows && !strings.HasSuffix(line, "\\") {
+				line += " \\"
+			}
+		} else {
+			if !continueStart.MatchString(line) {
+				line = " && " + line
+			}
+			if !isWindows && !strings.HasSuffix(line, "\\") {
+				line += " \\"
+			}
+		}
+		if !isWindows || strings.HasSuffix(line, "\\") {
+			line += "\n"
+		}
+		ret += line
+	}
+	if !isWindows && len(ret) > 3 {
+		ret = ret[0 : len(ret)-3]
+	}
+	return ret
+}
+
 // NewTempCmd ...
 func NewTempCmd(cwd string, cmd string) (*TempCmd, error) {
 	f, err := ioutil.TempDir("", "stringexec")
@@ -26,15 +59,16 @@ func NewTempCmd(cwd string, cmd string) (*TempCmd, error) {
 		return nil, err
 	}
 	fp := filepath.Join(f, "s")
-	if runtime.GOOS == "windows" {
+	if isWindows {
 		fp += ".bat"
 	}
+	cmd = prepareCommand(cmd, isWindows)
 	err = ioutil.WriteFile(fp, []byte(cmd), 0766)
 	if err != nil {
 		return nil, err
 	}
 	ret := &TempCmd{Cmd: exec.Command("sh", "-c", fp), f: fp}
-	if runtime.GOOS == "windows" {
+	if isWindows {
 		ret.Cmd = exec.Command("cmd", "/C", fp)
 	}
 	ret.Cmd.Dir = cwd

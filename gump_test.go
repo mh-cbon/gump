@@ -258,10 +258,19 @@ func TestGumpWithKoScripts(t *testing.T) {
 	tt := &TestingExiter{t}
 
 	dir := "git_test/git_with_ko_scripts"
-	initGitDir(t, dir, ".version", `preversion: eccho "hello"
-  postversion: eccho "goodbye"`)
+	initGitDir(t, dir, ".version", `preversion: eccho "hello" \
+		&& echo "mustnotdisplay1"
+  postversion: eccho "goodbye" && echo "mustnotdisplay2"`)
 
-	mustNotExecOk(t, makeCmd(dir, gumpPath, "prerelease", "-b"))
+	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
+	s := "mustnotdisplay1"
+	if strings.Index(out, s) > -1 {
+		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+	}
+	s = "mustnotdisplay2"
+	if strings.Index(out, s) > -1 {
+		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+	}
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -305,10 +314,20 @@ func TestGumpWithKoGlideScripts(t *testing.T) {
 
 	dir := "git_test/git_with_ko_glide_scripts"
 	initGitDir(t, dir, "glide.yaml", `scripts:
-    preversion: eccho "hello"
-    postversion: eccho "goodbye"`)
+    preversion: |
+			eccho "hello" \
+			&& echo "mustnotdisplay1"
+    postversion: eccho "goodbye" && echo "mustnotdisplay2"`)
 
-	mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
+	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
+	s := "mustnotdisplay1"
+	if strings.Index(out, s) > -1 {
+		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+	}
+	s = "mustnotdisplay2"
+	if strings.Index(out, s) > -1 {
+		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+	}
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -354,10 +373,20 @@ func TestGumpWithKoShScripts(t *testing.T) {
 	dir := "git_test/git_with_sh_scripts"
 	initGitDir(t, dir, ".version.sh", `preversion=
       eccho "hello"
+			echo "mustnotdisplay1"
     postversion=
-      eccho "goodbye"`)
+      eccho "goodbye"
+		echo "mustnotdisplay2"`)
 
-	mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
+	out := mustNotExecOk(tt, makeCmd(dir, gumpPath, "prerelease", "-b"))
+	s := "mustnotdisplay1"
+	if strings.Index(out, s) > -1 {
+		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+	}
+	s = "mustnotdisplay2"
+	if strings.Index(out, s) > -1 {
+		t.Errorf("Output does not match expected to NOT contain %q\n", s)
+	}
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -383,7 +412,7 @@ func mustExecOk(t Errorer, cmd *exec.Cmd) string {
 func mustNotExecOk(t Errorer, cmd *exec.Cmd) string {
 	out, err := cmd.CombinedOutput()
 	if err == nil {
-		fmt.Println(out)
+		fmt.Println(string(out))
 	}
 	mustErr(t, err)
 	if cmd != nil {
