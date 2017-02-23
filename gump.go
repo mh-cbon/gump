@@ -1,3 +1,5 @@
+// Gump is an utility to bump your package using semver.
+
 package main
 
 import (
