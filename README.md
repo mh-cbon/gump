@@ -1,15 +1,35 @@
-# gump - Bump it!
+# gump
 
-Bin util to bump your package using semver
+[![travis Status](https://travis-ci.org/mh-cbon/gump.svg?branch=master)](https://travis-ci.org/mh-cbon/gump)[![appveyor Status](https://ci.appveyor.com/api/projects/status/github/mh-cbon/gump?branch=master&svg=true)](https://ci.appveyor.com/project/mh-cbon/gump)
+[![GoDoc](https://godoc.org/github.com/mh-cbon/gump?status.svg)](http://godoc.org/github.com/mh-cbon/gump)
+
+
+Gump is an utility to bump your package using semver.
+
 
 This tool is part of the [go-github-release workflow](https://github.com/mh-cbon/go-github-release)
 
-## Install
+# Install
 
-Pick an msi package [here](https://github.com/mh-cbon/gump/releases)!
+Check the [release page](https://github.com/mh-cbon/gump/releases)!
 
-__deb/ubuntu/rpm repositories__
+#### Glide
 
+```sh
+mkdir -p $GOPATH/src/github.com/mh-cbon/gump
+cd $GOPATH/src/github.com/mh-cbon/gump
+git clone https://github.com/mh-cbon/gump.git .
+glide install
+go install
+```
+
+
+#### Chocolatey
+```sh
+choco install gump
+```
+
+#### linux rpm/deb repository
 ```sh
 wget -O - https://raw.githubusercontent.com/mh-cbon/latest/master/source.sh \
 | GH=mh-cbon/gump sh -xe
@@ -18,8 +38,7 @@ curl -L https://raw.githubusercontent.com/mh-cbon/latest/master/source.sh \
 | GH=mh-cbon/gump sh -xe
 ```
 
-__deb/ubuntu/rpm packages__
-
+#### linux rpm/deb standalone package
 ```sh
 curl -L https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh \
 | GH=mh-cbon/gump sh -xe
@@ -29,25 +48,9 @@ https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh \
 | GH=mh-cbon/gump sh -xe
 ```
 
-__chocolatey__
+# Usage
 
-```sh
-choco install gump -y
-```
-
-__go__
-
-```sh
-mkdir -p $GOPATH/src/github.com/mh-cbon
-cd $GOPATH/src/github.com/mh-cbon
-git clone https://github.com/mh-cbon/gump.git
-cd gump
-glide install
-go install
-```
-
-## Usage
-
+__$ gump -help__
 ```sh
 Gump - Bump your package
 
@@ -72,6 +75,16 @@ Examples
   gump patch -m "tag message"
   # Bump major with a message
   gump major -m "tag message"
+```
+
+# Cli examples
+
+```sh
+gump patch -d
+gump prerelease -a -d
+gump prerelease -b -d
+gump minor -d
+gump major -d
 ```
 
 ## Pre/Post version scripts
@@ -109,32 +122,67 @@ arguments are present, otherwise it is replaced by the value `0`
 - `!isprerelease_bool!` will be replaced by `true` when `--beta` or `--alpha`
 arguments are present, otherwise it is replaced by the value `false`
 
+#### Using a .version.sh file
+
+Drop a file named `.version.sh` on your root such
+
+
+__> .version.sh__
+```sh
+PREBUMP=
+  666 git fetch --tags origin master
+  666 git pull origin master
+
+PREVERSION=
+  philea -s "666 go vet %s" "666 go-fmt-fail %s"
+  666 go run gump.go -v
+  666 changelog finalize --version !newversion!
+  666 commit -q -m "changelog: !newversion!" -f change.log
+
+POSTVERSION=
+  666 changelog md -o CHANGELOG.md --vars='{"name":"gump"}'
+  666 commit -q -m "changelog: !newversion!" -f CHANGELOG.md
+  666 git push
+  666 git push --tags
+  666 gh-api-cli create-release -n release -o mh-cbon -r gump \
+   --ver !newversion! -c "changelog ghrelease --version !newversion!" \
+  --draft !isprerelease!
+  666 go install --ldflags "-X main.VERSION=!newversion!"
+```
+
 #### Using a .version file
 
 Drop a file named `.version` on your root such
 
-```sh
+
+__> .version-demo__
+```version-demo
 # demo of .version file
 prebump: git fetch --tags
-preversion: philea "go vet %s" "go fmt %s"
-postversion: git push && git push --tags \
-# multiline works too
-&& echo "and also with comments in the middle"
+preversion: go vet && go fmt
+postversion: git push && git push --tags
 ```
 
 #### Using a glide.yaml file
 
 Add a new key `scripts` to your glide file such
 
-```yml
+
+__> demo-glide.yaml__
+```yaml
+package: github.com/mh-cbon/gump
 scripts:
-  preversion: echo "hello"
-  postversion: echo "goodbye"
+  prebump: echo "pre bump"
+  postbump: echo "post bump"
+import:
+- package: gopkg.in/yaml.v2
 ```
 
 If you have longer scripts to run you can write it like this:
 
-```yml
+
+__> demo-long-glide.yaml__
+```yaml
 scripts:
   preversion: |
     echo "hello" \

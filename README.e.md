@@ -2,7 +2,7 @@
 
 {{template "badge/travis" .}}{{template "badge/appveyor" .}}{{template "badge/godoc" .}}
 
-{{pkgdoc}}
+{{pkgdoc "gump.go"}}
 
 This tool is part of the [go-github-release workflow](https://github.com/mh-cbon/go-github-release)
 
@@ -23,7 +23,6 @@ This tool is part of the [go-github-release workflow](https://github.com/mh-cbon
 {{template "linux/gh_pkg" .}}
 
 # Usage
-
 {{cli "gump" "-help"}}
 
 # Cli examples
