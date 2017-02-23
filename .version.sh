@@ -7,6 +7,7 @@ PREVERSION=
   666 go run gump.go -v
   666 go test
   666 go test config/*
+  666 go test stringexec/*
   666 changelog finalize --version !newversion!
   666 commit -q -m "changelog: !newversion!" -f change.log
 
