@@ -69,7 +69,7 @@ func (v *ShConfig) Parse(data []byte) error {
 					v.values[currentScriptID] = strings.TrimSpace(currentScript)
 				}
 				parts := scriptID.FindAllStringSubmatch(line, -1)
-				currentScriptID = parts[0][1]
+				currentScriptID = strings.ToLower(parts[0][1])
 				currentScript = ""
 			} else if currentScriptID != "" && line != "" {
 				currentScript += strings.TrimLeft(strings.TrimLeft(line, "\t"), " ") + "\n"
