@@ -118,7 +118,9 @@ func IncrementPrerelease(currentVersion *semver.Version, beta bool, alpha bool) 
 				return "", err
 			}
 		} else if name == "beta" && alpha {
-			newVersion = currentVersion.IncPatch() // downgrade from beta to alpha not possible without change patch number
+			// downgrade from beta to alpha not possible without change patch number
+			newVersion = currentVersion.IncPatch() // as a beta has lower precedence than patch, 1.0.0-beta => 1.0.0
+			newVersion = newVersion.IncPatch()     // need to update again to move to 1.0.1
 			newVersion, err = newVersion.SetPrerelease("alpha")
 			if err != nil {
 				return "", err
