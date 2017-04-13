@@ -72,9 +72,7 @@ func TestGumpIncPatch(t *testing.T) {
 	dir := "git_test/git"
 	initGitDir(t, dir, "", "", "notsemvertag", "v1.0.2", "v1.0.0")
 
-	cmd := makeCmd(dir, gumpPath, "patch")
-
-	mustExecOk(tt, cmd)
+	mustExecOk(tt, makeCmd(dir, gumpPath, "patch"))
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
@@ -354,11 +352,35 @@ func TestGumpWithKoShScripts(t *testing.T) {
 	mustNotErr(t, os.RemoveAll(dir))
 }
 
+func TestGumpMultipleMajor(t *testing.T) {
+	tt := &TestingExiter{t}
+
+	dir := "git_test/git"
+	initGitDir(t, dir, "", "", "2.0.0", "v1.0.2", "v1.0.0")
+
+	// on master last tag is 2.0.0, patch => 2.0.1
+	mustExecOk(tt, makeCmd(dir, "git", "checkout", "master"))
+	out := mustExecOk(tt, makeCmd(dir, gumpPath, "patch", "-d"))
+	execOutMustContain(tt, out, "The new tag to create is: 2.0.1")
+
+	// on 1.0.2, patch => 1.0.3
+	mustExecOk(tt, makeCmd(dir, "git", "checkout", "v1.0.2"))
+	out = mustExecOk(tt, makeCmd(dir, gumpPath, "patch", "-d"))
+	execOutMustContain(tt, out, "The new tag to create is: 1.0.3")
+
+	tags, err := repoutils.List("git", dir)
+	mustNotErr(tt, err)
+	mustContain(tt, tags, "1.0.3")
+
+	mustNotErr(t, os.RemoveAll(dir))
+	t.Errorf("what")
+}
+
 type Errorer interface {
 	Errorf(string, ...interface{})
 }
 
-func execOutMustContain(t *testing.T, out string, s string) bool {
+func execOutMustContain(t Errorer, out string, s string) bool {
 	if strings.Index(out, s) == -1 {
 		t.Errorf("Output does not match expected to contain %q\n%v\n", s, out)
 		return false
@@ -366,7 +388,7 @@ func execOutMustContain(t *testing.T, out string, s string) bool {
 	return true
 }
 
-func execOutMustNotContain(t *testing.T, out string, s string) bool {
+func execOutMustNotContain(t Errorer, out string, s string) bool {
 	if !isWindows && strings.Index(out, s) > -1 {
 		t.Errorf("Output does not match expected to NOT contain %q\n%v\n", s, out)
 		return false

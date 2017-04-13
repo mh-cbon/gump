@@ -6,8 +6,9 @@
 
 This tool is part of the [go-github-release workflow](https://github.com/mh-cbon/go-github-release)
 
-# Install
+# {{toc 4}}
 
+# Install
 {{template "gh/releases" .}}
 
 #### Glide
@@ -22,10 +23,11 @@ This tool is part of the [go-github-release workflow](https://github.com/mh-cbon
 #### linux rpm/deb standalone package
 {{template "linux/gh_pkg" .}}
 
-# Usage
-{{cli "gump" "-help"}}
+# Cli
 
-# Cli examples
+{{exec "gump" "-help" | color "sh"}}
+
+### Examples
 
 ```sh
 gump patch -d
@@ -35,7 +37,9 @@ gump minor -d
 gump major -d
 ```
 
-## Pre/Post version scripts
+# Bump script
+
+### Pre/Post version scripts
 
 Gump can detect, parse and execute `pre/post` version scripts.
 
@@ -70,29 +74,31 @@ arguments are present, otherwise it is replaced by the value `0`
 - `!isprerelease_bool!` will be replaced by `true` when `--beta` or `--alpha`
 arguments are present, otherwise it is replaced by the value `false`
 
-#### Using a .version.sh file
+### .version.sh
 
 Drop a file named `.version.sh` on your root such
 
-{{file ".version.sh"}}
+{{cat ".version.sh" | color "sh"}}
 
-#### Using a .version file
+### .version
 
 Drop a file named `.version` on your root such
 
-{{file ".version-demo"}}
+{{cat ".version-demo" | color "sh"}}
 
-#### Using a glide.yaml file
+#### glide.yaml
 
 Add a new key `scripts` to your glide file such
 
-{{file "demo-glide.yaml"}}
+{{cat "demo-glide.yaml" | color "sh"}}
 
 If you have longer scripts to run you can write it like this:
 
-{{file "demo-long-glide.yaml"}}
+{{cat "demo-long-glide.yaml" | color "sh"}}
 
-## debug
+# Recipes
+
+### debug
 
 Declare a new env `VERBOSE=gump` or `VERBOSE=*` to get more information.
 
@@ -101,6 +107,19 @@ VERBOSE=gump gump patch -d
 VERBOSE=* gump patch -d
 ```
 
-## todo
+
+### Release the project
+
+```sh
+gump patch -d # check
+gump patch # bump
+```
+
+# History
+
+[CHANGELOG](CHANGELOG.md)
+
+
+# Todos
 
 - at some point, probably, move to https://github.com/Masterminds/vcs

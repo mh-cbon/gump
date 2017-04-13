@@ -9,8 +9,21 @@ Gump is an utility to bump your package using semver.
 
 This tool is part of the [go-github-release workflow](https://github.com/mh-cbon/go-github-release)
 
-# Install
+# TOC
+- [Install](#install)
+- [Cli](#cli)
+  - [Examples](#examples)
+- [Bump script](#bump-script)
+  - [Pre/Post version scripts](#prepost-version-scripts)
+  - [.version.sh](#versionsh)
+  - [.version](#version)
+- [Recipes](#recipes)
+  - [debug](#debug)
+  - [Release the project](#release-the-project)
+- [History](#history)
+- [Todos](#todos)
 
+# Install
 Check the [release page](https://github.com/mh-cbon/gump/releases)!
 
 #### Glide
@@ -48,9 +61,10 @@ https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh \
 | GH=mh-cbon/gump sh -xe
 ```
 
-# Usage
+# Cli
 
-__$ gump -help__
+
+###### $ gump -help
 ```sh
 Gump - Bump your package
 
@@ -77,7 +91,7 @@ Examples
   gump major -m "tag message"
 ```
 
-# Cli examples
+### Examples
 
 ```sh
 gump patch -d
@@ -87,7 +101,9 @@ gump minor -d
 gump major -d
 ```
 
-## Pre/Post version scripts
+# Bump script
+
+### Pre/Post version scripts
 
 Gump can detect, parse and execute `pre/post` version scripts.
 
@@ -122,12 +138,12 @@ arguments are present, otherwise it is replaced by the value `0`
 - `!isprerelease_bool!` will be replaced by `true` when `--beta` or `--alpha`
 arguments are present, otherwise it is replaced by the value `false`
 
-#### Using a .version.sh file
+### .version.sh
 
 Drop a file named `.version.sh` on your root such
 
 
-__> .version.sh__
+###### > .version.sh
 ```sh
 PREBUMP=
   666 git fetch --tags origin master
@@ -155,26 +171,26 @@ POSTVERSION=
   --draft !isprerelease!
 ```
 
-#### Using a .version file
+### .version
 
 Drop a file named `.version` on your root such
 
 
-__> .version-demo__
-```version-demo
+###### > .version-demo
+```sh
 # demo of .version file
 prebump: git fetch --tags
 preversion: go vet && go fmt
 postversion: git push && git push --tags
 ```
 
-#### Using a glide.yaml file
+#### glide.yaml
 
 Add a new key `scripts` to your glide file such
 
 
-__> demo-glide.yaml__
-```yaml
+###### > demo-glide.yaml
+```sh
 package: github.com/mh-cbon/gump
 scripts:
   prebump: echo "pre bump"
@@ -186,8 +202,8 @@ import:
 If you have longer scripts to run you can write it like this:
 
 
-__> demo-long-glide.yaml__
-```yaml
+###### > demo-long-glide.yaml
+```sh
 scripts:
   preversion: |
     echo "hello" \
@@ -197,7 +213,9 @@ scripts:
     && echo "goodbye"
 ```
 
-## debug
+# Recipes
+
+### debug
 
 Declare a new env `VERBOSE=gump` or `VERBOSE=*` to get more information.
 
@@ -206,6 +224,20 @@ VERBOSE=gump gump patch -d
 VERBOSE=* gump patch -d
 ```
 
-## todo
+
+### Release the project
+
+```sh
+gump patch -d # check
+gump patch # bump
+```
+
+# History
+
+[CHANGELOG](CHANGELOG.md)
+
+
+# Todos
 
 - at some point, probably, move to https://github.com/Masterminds/vcs
+
