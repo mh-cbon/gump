@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  
+  <head>
+  <meta charset="UTF-8">
+  <title>gump</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#157878">
+  <link rel="stylesheet" href="/gump//css/normalize.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/gump//css/cayman.css">
+</head>
+
+  <body>
+    <section class="page-header">
+  <h1 class="project-name">gump</h1>
+  <h2 class="project-tagline">Bin util to bump your package using semver</h2>
+  <a href="http://github.com/mh-cbon/gump" class="btn">View on GitHub</a>
+  <a href="http://github.com/mh-cbon/gump/zipball/gh-pages" class="btn">Download .zip</a>
+  <a href="http://github.com/mh-cbon/gump/tarball/gh-pages" class="btn">Download .tar.gz</a>
+</section>
+
+
+    <section class="main-content">
+      
+      <h1 id="gump">gump</h1>
+
+<p><a href="https://travis-ci.org/mh-cbon/gump"><img src="https://travis-ci.org/mh-cbon/gump.svg?branch=master" alt="travis Status" /></a><a href="https://ci.appveyor.com/project/mh-cbon/gump"><img src="https://ci.appveyor.com/api/projects/status/github/mh-cbon/gump?branch=master&amp;svg=true" alt="appveyor Status" /></a>
+<a href="https://goreportcard.com/report/github.com/mh-cbon/gump"><img src="https://goreportcard.com/badge/github.com/mh-cbon/gump" alt="Go Report Card" /></a></p>
+
+<p><a href="http://godoc.org/github.com/mh-cbon/gump"><img src="https://godoc.org/github.com/mh-cbon/gump?status.svg" alt="GoDoc" /></a></p>
+
+<p>Gump is an utility to bump your package using semver.</p>
+
+<p>This tool is part of the <a href="https://github.com/mh-cbon/go-github-release">go-github-release workflow</a></p>
+
+<h1 id="toc">TOC</h1>
+<ul>
+  <li><a href="#install">Install</a></li>
+  <li><a href="#cli">Cli</a>
+    <ul>
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+  </li>
+  <li><a href="#bump-script">Bump script</a>
+    <ul>
+      <li><a href="#prepost-version-scripts">Pre/Post version scripts</a></li>
+      <li><a href="#versionsh">.version.sh</a></li>
+      <li><a href="#version">.version</a></li>
+    </ul>
+  </li>
+  <li><a href="#recipes">Recipes</a>
+    <ul>
+      <li><a href="#debug">debug</a></li>
+      <li><a href="#release-the-project">Release the project</a></li>
+    </ul>
+  </li>
+  <li><a href="#history">History</a></li>
+  <li><a href="#todos">Todos</a></li>
+</ul>
+
+<h1 id="install">Install</h1>
+<p>Check the <a href="https://github.com/mh-cbon/gump/releases">release page</a>!</p>
+
+<h4 id="glide">Glide</h4>
+
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>mkdir -p <span class="nv">$GOPATH</span>/src/github.com/mh-cbon/gump
+<span class="nb">cd</span> <span class="nv">$GOPATH</span>/src/github.com/mh-cbon/gump
+git clone https://github.com/mh-cbon/gump.git .
+glide install
+go install
+</code></pre>
+</div>
+
+<h4 id="chocolatey">Chocolatey</h4>
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>choco install gump
+</code></pre>
+</div>
+
+<h4 id="linux-rpmdeb-repository">linux rpm/deb repository</h4>
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>wget -O - https://raw.githubusercontent.com/mh-cbon/latest/master/source.sh <span class="se">\</span>
+| <span class="nv">GH</span><span class="o">=</span>mh-cbon/gump sh -xe
+<span class="c"># or</span>
+curl -L https://raw.githubusercontent.com/mh-cbon/latest/master/source.sh <span class="se">\</span>
+| <span class="nv">GH</span><span class="o">=</span>mh-cbon/gump sh -xe
+</code></pre>
+</div>
+
+<h4 id="linux-rpmdeb-standalone-package">linux rpm/deb standalone package</h4>
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>curl -L https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh <span class="se">\</span>
+| <span class="nv">GH</span><span class="o">=</span>mh-cbon/gump sh -xe
+<span class="c"># or</span>
+wget -q -O - --no-check-certificate <span class="se">\</span>
+https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh <span class="se">\</span>
+| <span class="nv">GH</span><span class="o">=</span>mh-cbon/gump sh -xe
+</code></pre>
+</div>
+
+<h1 id="cli">Cli</h1>
+
+<h6 id="-gump--help">$ gump -help</h6>
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>Gump - Bump your package
+
+Usage:
+  gump prerelease <span class="o">[</span>-b|--beta] <span class="o">[</span>-a|--alpha] <span class="o">[</span>-d|--dry] <span class="o">[</span>-m &lt;message&gt;]
+  gump patch <span class="o">[</span>-d|--dry] <span class="o">[</span>-m &lt;message&gt;]
+  gump minor <span class="o">[</span>-d|--dry] <span class="o">[</span>-m &lt;message&gt;]
+  gump major <span class="o">[</span>-d|--dry] <span class="o">[</span>-m &lt;message&gt;]
+  gump -h | --help
+  gump -v | --version
+
+Options:
+  -h --help             Show this screen.
+  -v --version          Show version.
+  -d --dry              Only display the new version number.
+  -b --beta             Update last beta version.
+  -a --alpha            Update last alpha version.
+  -m                    Set tag message.
+
+Examples
+  <span class="c"># Bump patch with a message</span>
+  gump patch -m <span class="s2">"tag message"</span>
+  <span class="c"># Bump major with a message</span>
+  gump major -m <span class="s2">"tag message"</span>
+</code></pre>
+</div>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>gump patch -d
+gump prerelease -a -d
+gump prerelease -b -d
+gump minor -d
+gump major -d
+</code></pre>
+</div>
+
+<h1 id="bump-script">Bump script</h1>
+
+<h3 id="prepost-version-scripts">Pre/Post version scripts</h3>
+
+<p>Gump can detect, parse and execute <code class="highlighter-rouge">pre/post</code> version scripts.</p>
+
+<p>They are numerous hooks executed in this order :</p>
+
+<ul>
+  <li><strong>prebump</strong> : Runs in first for any type of update, it does not receive <code class="highlighter-rouge">!newversion!</code> tag.
+It should be used to synchronize your local with remote.</li>
+  <li><strong>prepatch</strong> : Runs for a <code class="highlighter-rouge">patch</code> update.</li>
+  <li><strong>preminor</strong> : Runs for a <code class="highlighter-rouge">minor</code> update.</li>
+  <li><strong>premajor</strong> : Runs for a <code class="highlighter-rouge">major</code> update.</li>
+  <li><strong>preversion</strong> : Runs for a any type of update.</li>
+  <li><strong>version is set here on your vcs</strong></li>
+  <li><strong>postversion</strong> : Runs for a any type of update.</li>
+  <li><strong>postmajor</strong> : Runs for a <code class="highlighter-rouge">major</code> update.</li>
+  <li><strong>postminor</strong> : Runs for a <code class="highlighter-rouge">minor</code> update.</li>
+  <li><strong>postpatch</strong> : Runs for a <code class="highlighter-rouge">patch</code> update.</li>
+  <li><strong>postbump</strong> : Runs for a any type of update.</li>
+</ul>
+
+<p>If any <code class="highlighter-rouge">pre</code> script returns an exit code different than <code class="highlighter-rouge">0</code>,
+ the execution will stop and the version will remain untouched.</p>
+
+<p>If <code class="highlighter-rouge">post</code> script fails, the version has already changed,
+<code class="highlighter-rouge">gump</code> will return an exit code = 1.</p>
+
+<p>Scripts can use few special tags</p>
+<ul>
+  <li><code class="highlighter-rouge">!newversion!</code> will be replaced by the value of the new version (not available in <code class="highlighter-rouge">prebump</code>)</li>
+  <li><code class="highlighter-rouge">!tagmessage!</code> will be replaced by the value of the tag message</li>
+  <li><code class="highlighter-rouge">!isprerelease!</code> will be replaced by <code class="highlighter-rouge">yes</code> when <code class="highlighter-rouge">--beta</code> or <code class="highlighter-rouge">--alpha</code>
+arguments are present, otherwise it is replaced by the value <code class="highlighter-rouge">no</code></li>
+  <li><code class="highlighter-rouge">!isprerelease_int!</code> will be replaced by <code class="highlighter-rouge">1</code> when <code class="highlighter-rouge">--beta</code> or <code class="highlighter-rouge">--alpha</code>
+arguments are present, otherwise it is replaced by the value <code class="highlighter-rouge">0</code></li>
+  <li><code class="highlighter-rouge">!isprerelease_bool!</code> will be replaced by <code class="highlighter-rouge">true</code> when <code class="highlighter-rouge">--beta</code> or <code class="highlighter-rouge">--alpha</code>
+arguments are present, otherwise it is replaced by the value <code class="highlighter-rouge">false</code></li>
+</ul>
+
+<h3 id="versionsh">.version.sh</h3>
+
+<p>Drop a file named <code class="highlighter-rouge">.version.sh</code> on your root such</p>
+
+<h6 id="-versionsh">&gt; .version.sh</h6>
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="nv">PREBUMP</span><span class="o">=</span>
+  666 git fetch --tags origin master
+  666 git pull origin master
+
+<span class="nv">PREVERSION</span><span class="o">=</span>
+  philea -s <span class="s2">"666 go vet %s"</span> <span class="s2">"666 go-fmt-fail %s"</span>
+  666 go run gump.go -v
+  666 go <span class="nb">test
+  </span>666 go <span class="nb">test </span>config/<span class="k">*</span>
+  666 go <span class="nb">test </span>stringexec/<span class="k">*</span>
+  666 changelog finalize --version !newversion!
+  666 commit -q -m <span class="s2">"changelog: !newversion!"</span> -f change.log
+
+<span class="nv">POSTVERSION</span><span class="o">=</span>
+  666 changelog md -o CHANGELOG.md --guess
+  666 commit -q -m <span class="s2">"changelog: !newversion!"</span> -f CHANGELOG.md
+  666 go install --ldflags <span class="s2">"-X main.VERSION=!newversion!"</span>
+  666 emd gen -out README.md
+  666 commit -q -m <span class="s2">"README: !newversion!"</span> -f README.md
+  666 git push
+  666 git push --tags
+  666 gh-api-cli create-release -n release -o mh-cbon --guess <span class="se">\</span>
+   --ver !newversion! -c <span class="s2">"changelog ghrelease --version !newversion!"</span> <span class="se">\</span>
+  --draft !isprerelease!
+</code></pre>
+</div>
+
+<h3 id="version">.version</h3>
+
+<p>Drop a file named <code class="highlighter-rouge">.version</code> on your root such</p>
+
+<h6 id="-version-demo">&gt; .version-demo</h6>
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="c"># demo of .version file</span>
+prebump: git fetch --tags
+preversion: go vet <span class="o">&amp;&amp;</span> go fmt
+postversion: git push <span class="o">&amp;&amp;</span> git push --tags
+</code></pre>
+</div>
+
+<h4 id="glideyaml">glide.yaml</h4>
+
+<p>Add a new key <code class="highlighter-rouge">scripts</code> to your glide file such</p>
+
+<h6 id="-demo-glideyaml">&gt; demo-glide.yaml</h6>
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>package: github.com/mh-cbon/gump
+scripts:
+  prebump: <span class="nb">echo</span> <span class="s2">"pre bump"</span>
+  postbump: <span class="nb">echo</span> <span class="s2">"post bump"</span>
+import:
+- package: gopkg.in/yaml.v2
+</code></pre>
+</div>
+
+<p>If you have longer scripts to run you can write it like this:</p>
+
+<h6 id="-demo-long-glideyaml">&gt; demo-long-glide.yaml</h6>
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>scripts:
+  preversion: |
+    <span class="nb">echo</span> <span class="s2">"hello"</span> <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"how are you ?"</span>
+  postversion: |
+    <span class="nb">echo</span> <span class="s2">"I m fine"</span>
+    <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"goodbye"</span>
+</code></pre>
+</div>
+
+<h1 id="recipes">Recipes</h1>
+
+<h3 id="debug">debug</h3>
+
+<p>Declare a new env <code class="highlighter-rouge">VERBOSE=gump</code> or <code class="highlighter-rouge">VERBOSE=*</code> to get more information.</p>
+
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="nv">VERBOSE</span><span class="o">=</span>gump gump patch -d
+<span class="nv">VERBOSE</span><span class="o">=</span><span class="k">*</span> gump patch -d
+</code></pre>
+</div>
+
+<h3 id="release-the-project">Release the project</h3>
+
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code>gump patch -d <span class="c"># check</span>
+gump patch <span class="c"># bump</span>
+</code></pre>
+</div>
+
+<h1 id="history">History</h1>
+
+<p><a href="CHANGELOG.md">CHANGELOG</a></p>
+
+<h1 id="todos">Todos</h1>
+
+<ul>
+  <li>at some point, probably, move to https://github.com/Masterminds/vcs</li>
+</ul>
+
+
+
+      <footer class="site-footer">
+  <span class="site-footer-owner"><a href="">gump</a> is maintained by <a href="https://github.com/mh-cbon">mh-cbon</a>.</span>
+  <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+</footer>
+
+
+    </section>
+
+  </body>
+</html>
