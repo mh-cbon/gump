@@ -1,0 +1,6 @@
+[gump]
+name=Bump your package using semver
+baseurl=https://mh-cbon.github.io/gump/rpm/$basearch/
+enabled=1
+skip_if_unavailable=1
+gpgcheck=0
