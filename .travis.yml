@@ -32,7 +32,6 @@ script:
   - go test -v
   - go test config/* -v
   - go test stringexec/* -v
-  - wget -O - https://raw.githubusercontent.com/mh-cbon/gh-pages/master/all.sh | sh -x
 
 before_deploy:
   - mkdir -p build/{386,amd64}
