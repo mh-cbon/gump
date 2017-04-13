@@ -1,0 +1,72 @@
+Package: gump
+Priority: extra
+Section: unknown
+Installed-Size: 3.2 kB
+Maintainer: mh-cbon <mh-cbon@users.noreply.github.com>
+Architecture: amd64
+Source: gump
+Version: 0.1.9
+Filename: pool/contrib/g/gump/gump-0.1.9_amd64.deb
+Size: 885886
+MD5sum: ca8a02fbef868968993145ec6a6a4732
+SHA1: f2f89b38cb24856fdb5cf1447e099581d32dd61b
+SHA256: 44c872506caf1c9d2081ee4dab39725bf36facece95a00e6b83426cb62e38c92
+SHA512: 1a390c5576f5948d2e15a549d10f2d2f58de4ceafe6cf3d661e11a9d2de5cb7a3528c5a9681506e62b2ef170e206c6f937337e4cf2a72d31d4b48c175ba834ec
+Description: Bump your package using semver
+Package-Type: deb
+Homepage: http://github.com/mh-cbon/gump
+
+Package: gump
+Priority: extra
+Section: unknown
+Installed-Size: 3.4 kB
+Maintainer: mh-cbon <mh-cbon@users.noreply.github.com>
+Architecture: amd64
+Source: gump
+Version: 0.1.8
+Filename: pool/contrib/g/gump/gump-0.1.8_amd64.deb
+Size: 892106
+MD5sum: 7e9922e6045f165f8d5d1c82cb8c39ca
+SHA1: 8097864270c838f3332280d541993987bcb47ba9
+SHA256: edb65b23ca2a15396dc2c3b4b037694c9ab14f3c65f9cad8e3edfda0937dc8b2
+SHA512: 82b0ed17d483f1fd18e73c8ebd91e80bdca3b3da71367885d337ec57930bf46a63919025dee7b2f1b5ffe161d50bb08bdf2693377adc5309590ecd74bd657ccf
+Description: Bump your package using semver
+Homepage: http://github.com/mh-cbon/gump
+Package-Type: deb
+
+Package: gump
+Priority: extra
+Section: unknown
+Installed-Size: 3.4 kB
+Maintainer: mh-cbon <mh-cbon@users.noreply.github.com>
+Architecture: amd64
+Source: gump
+Version: 0.1.7
+Filename: pool/contrib/g/gump/gump-0.1.7_amd64.deb
+Size: 892650
+MD5sum: c4296d44d2f0c215dd555797a7c9d4f4
+SHA1: 4446af82ebe024ac54cd7ab1158871f65cfd59af
+SHA256: 28defca7370a721b39e4959c47d960188dac6f32f0b5bed1aad2a77e273dc47b
+SHA512: b347f83b5eb7d727122c2805375a4eb0184e621b74b659f80d24643c4bad381028620e6c42a4cccdf7d3cb693a8cad09bfe5bb89854b80caf0f631e477e6081b
+Description: Bump your package using semver
+Package-Type: deb
+Homepage: http://github.com/mh-cbon/gump
+
+Package: gump
+Priority: extra
+Section: unknown
+Installed-Size: 3.4 kB
+Maintainer: mh-cbon <mh-cbon@users.noreply.github.com>
+Architecture: amd64
+Source: gump
+Version: 0.1.6
+Filename: pool/contrib/g/gump/gump-0.1.6_amd64.deb
+Size: 889742
+MD5sum: 59132d1cb2630a1cc011e94a8ccdcb06
+SHA1: a6784059902b242f5b2334586ee73117fcf11d01
+SHA256: b479c52122ded7fbee22b53615f75657c52f4489f53a3350c6e3e2a1137d735b
+SHA512: 760deca3663d2354d2ad18a687d27c40ee4fc42e91dd3a20f6c8a9f7a75d2060bd9deb07d86f6fa48e3c2fa1732d9a462646cce973b599c492030f4d8e5d0769
+Description: Bump your package using semver
+Homepage: http://github.com/mh-cbon/gump
+Package-Type: deb
+
