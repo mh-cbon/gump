@@ -29,7 +29,6 @@ install:
   - go install
 
 script:
-  - wget -O - https://raw.githubusercontent.com/mh-cbon/gh-pages/master/all.sh | sh -x
   - go test -v
   - go test config/* -v
   - go test stringexec/* -v
