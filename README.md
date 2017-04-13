@@ -1,6 +1,8 @@
 # gump
 
 [![travis Status](https://travis-ci.org/mh-cbon/gump.svg?branch=master)](https://travis-ci.org/mh-cbon/gump)[![appveyor Status](https://ci.appveyor.com/api/projects/status/github/mh-cbon/gump?branch=master&svg=true)](https://ci.appveyor.com/project/mh-cbon/gump)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mh-cbon/gump)](https://goreportcard.com/report/github.com/mh-cbon/gump)
+
 [![GoDoc](https://godoc.org/github.com/mh-cbon/gump?status.svg)](http://godoc.org/github.com/mh-cbon/gump)
 
 
