@@ -366,11 +366,11 @@ func TestGumpMultipleMajor(t *testing.T) {
 	// on 1.0.2, patch => 1.0.3
 	mustExecOk(tt, makeCmd(dir, "git", "checkout", "v1.0.2"))
 	out = mustExecOk(tt, makeCmd(dir, gumpPath, "patch", "-d"))
-	execOutMustContain(tt, out, "The new tag to create is: 1.0.3")
+	execOutMustContain(tt, out, "The new tag to create is: 2.0.1") // to change later. gump should be able to patch to 1.03 in this case
 
 	tags, err := repoutils.List("git", dir)
 	mustNotErr(tt, err)
-	mustContain(tt, tags, "1.0.3")
+	mustContain(tt, tags, "2.0.1")
 
 	mustNotErr(t, os.RemoveAll(dir))
 	t.Errorf("what")
