@@ -1,4 +1,0 @@
-# demo of .version file
-prebump: git fetch --tags
-preversion: go vet && go fmt
-postversion: git push && git push --tags

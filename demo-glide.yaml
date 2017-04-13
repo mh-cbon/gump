@@ -1,6 +1,0 @@
-package: github.com/mh-cbon/gump
-scripts:
-  prebump: echo "pre bump"
-  postbump: echo "post bump"
-import:
-- package: gopkg.in/yaml.v2
