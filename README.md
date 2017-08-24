@@ -1,10 +1,6 @@
 # gump
 
-[![travis Status](https://travis-ci.org/mh-cbon/gump.svg?branch=master)](https://travis-ci.org/mh-cbon/gump)[![appveyor Status](https://ci.appveyor.com/api/projects/status/github/mh-cbon/gump?branch=master&svg=true)](https://ci.appveyor.com/project/mh-cbon/gump)
-[![Go Report Card](https://goreportcard.com/badge/github.com/mh-cbon/gump)](https://goreportcard.com/report/github.com/mh-cbon/gump)
-
-[![GoDoc](https://godoc.org/github.com/mh-cbon/gump?status.svg)](http://godoc.org/github.com/mh-cbon/gump)
-
+[![travis Status](https://travis-ci.org/mh-cbon/gump.svg?branch=master)](https://travis-ci.org/mh-cbon/gump)[![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/mh-cbon/gump?branch=master&svg=true)](https://ci.appveyor.com/project/mh-cbon/gump)[![Go Report Card](https://goreportcard.com/badge/github.com/mh-cbon/gump)](https://goreportcard.com/report/github.com/mh-cbon/gump)[![GoDoc](https://godoc.org/github.com/mh-cbon/gump?status.svg)](http://godoc.org/github.com/mh-cbon/gump)
 
 Gump is an utility to bump your package using semver.
 
@@ -13,12 +9,17 @@ This tool is part of the [go-github-release workflow](https://github.com/mh-cbon
 
 # TOC
 - [Install](#install)
+  - [Glide](#glide)
+  - [Chocolatey](#chocolatey)
+  - [linux rpm/deb repository](#linux-rpmdeb-repository)
+  - [linux rpm/deb standalone package](#linux-rpmdeb-standalone-package)
 - [Cli](#cli)
   - [Examples](#examples)
 - [Bump script](#bump-script)
   - [Pre/Post version scripts](#prepost-version-scripts)
   - [.version.sh](#versionsh)
   - [.version](#version)
+    - [glide.yaml](#glideyaml)
 - [Recipes](#recipes)
   - [debug](#debug)
   - [Release the project](#release-the-project)
@@ -29,7 +30,6 @@ This tool is part of the [go-github-release workflow](https://github.com/mh-cbon
 Check the [release page](https://github.com/mh-cbon/gump/releases)!
 
 #### Glide
-
 ```sh
 mkdir -p $GOPATH/src/github.com/mh-cbon/gump
 cd $GOPATH/src/github.com/mh-cbon/gump
@@ -37,7 +37,6 @@ git clone https://github.com/mh-cbon/gump.git .
 glide install
 go install
 ```
-
 
 #### Chocolatey
 ```sh
@@ -65,8 +64,7 @@ https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh \
 
 # Cli
 
-
-###### $ gump -help
+gump -help
 ```sh
 Gump - Bump your package
 
@@ -144,8 +142,7 @@ arguments are present, otherwise it is replaced by the value `false`
 
 Drop a file named `.version.sh` on your root such
 
-
-###### > .version.sh
+.version.sh
 ```sh
 PREBUMP=
   666 git fetch --tags origin master
@@ -177,8 +174,7 @@ POSTVERSION=
 
 Drop a file named `.version` on your root such
 
-
-###### > .version-demo
+.version-demo
 ```sh
 # demo of .version file
 prebump: git fetch --tags
@@ -190,8 +186,7 @@ postversion: git push && git push --tags
 
 Add a new key `scripts` to your glide file such
 
-
-###### > demo-glide.yaml
+demo-glide.yaml
 ```sh
 package: github.com/mh-cbon/gump
 scripts:
@@ -203,8 +198,7 @@ import:
 
 If you have longer scripts to run you can write it like this:
 
-
-###### > demo-long-glide.yaml
+demo-long-glide.yaml
 ```sh
 scripts:
   preversion: |
@@ -242,4 +236,3 @@ gump patch # bump
 # Todos
 
 - at some point, probably, move to https://github.com/Masterminds/vcs
-
