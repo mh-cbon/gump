@@ -107,6 +107,8 @@ gump major -d
 
 Gump can detect, parse and execute `pre/post` version scripts.
 
+The file is written to be compatible for both `linux` and `windows`.
+
 They are numerous hooks executed in this order :
 
 - __prebump__ : Runs in first for any type of update, it does not receive `!newversion!` tag.
