@@ -25,10 +25,7 @@
       
       <h1 id="gump">gump</h1>
 
-<p><a href="https://travis-ci.org/mh-cbon/gump"><img src="https://travis-ci.org/mh-cbon/gump.svg?branch=master" alt="travis Status" /></a><a href="https://ci.appveyor.com/project/mh-cbon/gump"><img src="https://ci.appveyor.com/api/projects/status/github/mh-cbon/gump?branch=master&amp;svg=true" alt="appveyor Status" /></a>
-<a href="https://goreportcard.com/report/github.com/mh-cbon/gump"><img src="https://goreportcard.com/badge/github.com/mh-cbon/gump" alt="Go Report Card" /></a></p>
-
-<p><a href="http://godoc.org/github.com/mh-cbon/gump"><img src="https://godoc.org/github.com/mh-cbon/gump?status.svg" alt="GoDoc" /></a></p>
+<p><a href="https://travis-ci.org/mh-cbon/gump"><img src="https://travis-ci.org/mh-cbon/gump.svg?branch=master" alt="travis Status" /></a><a href="https://ci.appveyor.com/project/mh-cbon/gump"><img src="https://ci.appveyor.com/api/projects/status/github/mh-cbon/gump?branch=master&amp;svg=true" alt="Appveyor Status" /></a><a href="https://goreportcard.com/report/github.com/mh-cbon/gump"><img src="https://goreportcard.com/badge/github.com/mh-cbon/gump" alt="Go Report Card" /></a><a href="http://godoc.org/github.com/mh-cbon/gump"><img src="https://godoc.org/github.com/mh-cbon/gump?status.svg" alt="GoDoc" /></a></p>
 
 <p>Gump is an utility to bump your package using semver.</p>
 
@@ -36,7 +33,14 @@
 
 <h1 id="toc">TOC</h1>
 <ul>
-  <li><a href="#install">Install</a></li>
+  <li><a href="#install">Install</a>
+    <ul>
+      <li><a href="#glide">Glide</a></li>
+      <li><a href="#chocolatey">Chocolatey</a></li>
+      <li><a href="#linux-rpmdeb-repository">linux rpm/deb repository</a></li>
+      <li><a href="#linux-rpmdeb-standalone-package">linux rpm/deb standalone package</a></li>
+    </ul>
+  </li>
   <li><a href="#cli">Cli</a>
     <ul>
       <li><a href="#examples">Examples</a></li>
@@ -46,7 +50,11 @@
     <ul>
       <li><a href="#prepost-version-scripts">Pre/Post version scripts</a></li>
       <li><a href="#versionsh">.version.sh</a></li>
-      <li><a href="#version">.version</a></li>
+      <li><a href="#version">.version</a>
+        <ul>
+          <li><a href="#glideyaml">glide.yaml</a></li>
+        </ul>
+      </li>
     </ul>
   </li>
   <li><a href="#recipes">Recipes</a>
@@ -63,7 +71,6 @@
 <p>Check the <a href="https://github.com/mh-cbon/gump/releases">release page</a>!</p>
 
 <h4 id="glide">Glide</h4>
-
 <div class="language-sh highlighter-rouge"><pre class="highlight"><code>mkdir -p <span class="nv">$GOPATH</span>/src/github.com/mh-cbon/gump
 <span class="nb">cd</span> <span class="nv">$GOPATH</span>/src/github.com/mh-cbon/gump
 git clone https://github.com/mh-cbon/gump.git .
@@ -98,7 +105,7 @@ https://raw.githubusercontent.com/mh-cbon/latest/master/install.sh <span class="
 
 <h1 id="cli">Cli</h1>
 
-<h6 id="-gump--help">$ gump -help</h6>
+<p>gump -help</p>
 <div class="language-sh highlighter-rouge"><pre class="highlight"><code>Gump - Bump your package
 
 Usage:
@@ -180,7 +187,7 @@ arguments are present, otherwise it is replaced by the value <code class="highli
 
 <p>Drop a file named <code class="highlighter-rouge">.version.sh</code> on your root such</p>
 
-<h6 id="-versionsh">&gt; .version.sh</h6>
+<p>.version.sh</p>
 <div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="nv">PREBUMP</span><span class="o">=</span>
   666 git fetch --tags origin master
   666 git pull origin master
@@ -212,7 +219,7 @@ arguments are present, otherwise it is replaced by the value <code class="highli
 
 <p>Drop a file named <code class="highlighter-rouge">.version</code> on your root such</p>
 
-<h6 id="-version-demo">&gt; .version-demo</h6>
+<p>.version-demo</p>
 <div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="c"># demo of .version file</span>
 prebump: git fetch --tags
 preversion: go vet <span class="o">&amp;&amp;</span> go fmt
@@ -224,7 +231,7 @@ postversion: git push <span class="o">&amp;&amp;</span> git push --tags
 
 <p>Add a new key <code class="highlighter-rouge">scripts</code> to your glide file such</p>
 
-<h6 id="-demo-glideyaml">&gt; demo-glide.yaml</h6>
+<p>demo-glide.yaml</p>
 <div class="language-sh highlighter-rouge"><pre class="highlight"><code>package: github.com/mh-cbon/gump
 scripts:
   prebump: <span class="nb">echo</span> <span class="s2">"pre bump"</span>
@@ -236,7 +243,7 @@ import:
 
 <p>If you have longer scripts to run you can write it like this:</p>
 
-<h6 id="-demo-long-glideyaml">&gt; demo-long-glide.yaml</h6>
+<p>demo-long-glide.yaml</p>
 <div class="language-sh highlighter-rouge"><pre class="highlight"><code>scripts:
   preversion: |
     <span class="nb">echo</span> <span class="s2">"hello"</span> <span class="se">\</span>
@@ -274,7 +281,6 @@ gump patch <span class="c"># bump</span>
 <ul>
   <li>at some point, probably, move to https://github.com/Masterminds/vcs</li>
 </ul>
-
 
 
       <footer class="site-footer">
