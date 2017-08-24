@@ -1,6 +1,6 @@
 # Changelog - gump
 
-### 0.1.9
+### 1.0.1
 
 __Changes__
 
@@ -22,7 +22,7 @@ __Contributors__
 - mh-cbon
 
 Released by mh-cbon, Thu 23 Feb 2017 -
-[see the diff](https://github.com/mh-cbon/gump/compare/0.1.8...0.1.9#diff)
+[see the diff](https://github.com/mh-cbon/gump/compare/0.1.8...1.0.1#diff)
 ______________
 
 ### 0.1.8
@@ -323,6 +323,12 @@ ______________
 __Changes__
 
 - Empty
+
+
+
+
+
+
 
 Released by mh-cbon, Sat 11 Jun 2016 -
 [see the diff](https://github.com/mh-cbon/gump/compare/0.0.1...0.0.2#diff)
