@@ -5,13 +5,13 @@ Installed-Size: 2.7 kB
 Maintainer: mh-cbon <mh-cbon@users.noreply.github.com>
 Architecture: i386
 Source: gump
-Version: 0.1.9
-Filename: pool/contrib/g/gump/gump-0.1.9_386.deb
-Size: 841474
-MD5sum: d6d9147030188c7b396659601fd00377
-SHA1: 14fb476c17cdbd219b381684485f743ad7eb77fb
-SHA256: e6ec47b1a47dd5aa74a48674ebb90fb572a015425d31df6edecd9d75bb558b04
-SHA512: a2b1e8e96fb6ead673de1e28d40e4de2807ecef56f244eb8ef132de29fa621b08b928c573075dc50622b8b95785b9769d7c9ed5bd7c656a27f1e2b8deb26c1bb
+Version: 1.0.1
+Filename: pool/contrib/g/gump/gump-1.0.1_386.deb
+Size: 841322
+MD5sum: 7de3e1b9d11ee576c9584a59aa1bfeb3
+SHA1: b7bef65fd433125e983cb82726c2169124b5bf72
+SHA256: edfa1696a92d80bf02e0162719d608516a2d1287731d049e1d202669a02f7871
+SHA512: 7e2c0e9cad498b2bbe2143b54eb204261eb816ac524108bce8162983be61e0f036f6b1c6dbc245e76ad592c0a5f94ea8aea05f7fe89bc1df14109db152732326
 Description: Bump your package using semver
 Package-Type: deb
 Homepage: http://github.com/mh-cbon/gump
@@ -31,8 +31,8 @@ SHA1: 229f97b3747f8591df8953249f24ca065b736941
 SHA256: b29899083867d4d70babaca2076991a4c7a6f1d1e95170493ec255af903e28c1
 SHA512: d1c29506aef1036aab89d307710b25e889a363c9afd9bfc301be339900001968ba370263cc54b1ac4318c55becd8161a5e0658d30d26df9fc0d49f4dee2b3db0
 Description: Bump your package using semver
-Package-Type: deb
 Homepage: http://github.com/mh-cbon/gump
+Package-Type: deb
 
 Package: gump
 Priority: extra
@@ -49,8 +49,8 @@ SHA1: bd83c15980d8cc0f037e90ba08277ec66e722ee4
 SHA256: 0f4d5d81a8f5d9224c7a8160c2e00e9e18c61117eac9ad7da5fba9948d0dac04
 SHA512: 2f9a3a867561c8c1e31d4fb36e6bdc784d767bd2b913352dcb4484b7fd6708a3044c757f8c596e248e29e499367f01cfe8d5702c83ad9ae97f384b69f422c30c
 Description: Bump your package using semver
-Package-Type: deb
 Homepage: http://github.com/mh-cbon/gump
+Package-Type: deb
 
 Package: gump
 Priority: extra
@@ -67,6 +67,6 @@ SHA1: aa37519ca37bc6f225e0ef281cc3c7fe7109ea2b
 SHA256: c6b0eb6fa6048d21d3cacfca6f61b5a9fbb3f78d29fd9e4c2221ef741e59a899
 SHA512: c873bef980afaa812d1e353aee3ad4fa78d6c83c11ace66e5de0c909f86253f4dbf877f841af36916591f7d36d5b9093ac1c5af9cf1925d09c21594b466c1a57
 Description: Bump your package using semver
-Package-Type: deb
 Homepage: http://github.com/mh-cbon/gump
+Package-Type: deb
 
