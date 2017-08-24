@@ -1,5 +1,5 @@
 
-0.1.9
+1.0.1
 
   * gump(improve): dry output is more readable
   * gump(improve): added support for a new .version.sh file format.
@@ -236,6 +236,10 @@
 0.0.2
 
   * Empty
+
+
+
+
 
 
 -- mh-cbon <mh-cbon@users.noreply.github.com>; Sat, 11 Jun 2016 12:20:04 +0200
