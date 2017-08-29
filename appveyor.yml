@@ -4,6 +4,8 @@ skip_non_tags: true
 
 environment:
   GOPATH: c:\gopath
+  JFROG_CLI_OFFER_CONFIG: false
+  VCS_URL: https://github.com/%APPVEYOR_REPO_NAME%
   # GO15VENDOREXPERIMENT: 1
   # CHOCOKEY:
   #   secure: HRc9tf57V3c3dVyn8hvMkKeiwK2oyWvOSjNXembIAQctNx+GTGBBaHI3bh+8cIgy
@@ -24,7 +26,7 @@ install:
   - go get -u github.com/Masterminds/glide
   - glide install
 
-script:
+test:
   - go test -v
   - go test github.com/mh-cbon/gump/config -v
   - go test github.com/mh-cbon/gump/stringexec -v
