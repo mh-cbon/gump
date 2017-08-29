@@ -64,7 +64,7 @@ before_deploy:
   # create the deb package
   - cd $GOPATH/src/github.com/$TRAVIS_REPO_SLUG
   - mkdir -p build/$OSARCH
-  - GOOS=linux go build --ldflags "-X main.VERSION=$VERSION" -o build/$OSARCH/$GH_APP main.go
+  - GOOS=linux go build --ldflags "-X main.VERSION=$VERSION" -o build/$OSARCH/$GH_APP gump.go
   - go-bin-deb generate --file deb.json -a $OSARCH --version $VERSION -o $GH_APP-$OSARCH-$VERSION.deb
   # copy the deb for gh release (backward compatibility)
   - cp $GH_APP-$OSARCH-$VERSION.deb $GH_APP-$OKARCH.deb
