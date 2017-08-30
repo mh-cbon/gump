@@ -136,7 +136,12 @@ Examples
 func applyVersionUpgrade(vcs string, path string, newVersion string, message string) (string, error) {
 	ok, err := repoutils.IsClean(vcs, path)
 	if ok == false {
-		return "", errors.New("Your local copy contains uncommited changes!")
+		return "", errors.New(`Your local copy contains uncommited changes!
+
+gump will not proceed further until you committed all your changes.
+
+Once the repository has a clean state, please run gump again.
+`)
 	}
 	if err != nil {
 		return "", err
