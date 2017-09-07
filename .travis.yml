@@ -61,6 +61,7 @@ script:
 #   - curl -L https://raw.githubusercontent.com/mh-cbon/go-bin-rpm/master/setup-repository.sh | GH=$GH EMAIL=$EMAIL sh -xe
 
 before_deploy:
+  - POOL=`echo ${GH_APP} | cut -c 1`
   # create the deb package
   - cd $GOPATH/src/github.com/$TRAVIS_REPO_SLUG
   - mkdir -p build/$OSARCH
@@ -70,12 +71,10 @@ before_deploy:
   - cp $GH_APP-$OSARCH-$VERSION.deb $GH_APP-$OKARCH.deb
   # upload to bintray
   - curl -fL https://getcli.jfrog.io | sh
-  - ls -alh
   - ./jfrog bt pc --key=$BTKEY --user=$GH_USER --licenses=MIT --vcs-url=https://github.com/$GH_USER/deb $GH_USER/deb/$GH_APP || echo "package already exists"
-  - ./jfrog bt upload --override=true --key $BTKEY --publish=true --deb=unstable/main/$OSARCH $GH_APP-$OSARCH-$VERSION.deb $GH_USER/deb/$GH_APP/$VERSION pool/g/$GH_APP/
-  # prepare rpm package creation
+  - ./jfrog bt upload --override=true --key $BTKEY --publish=true --deb=unstable/main/$OSARCH $GH_APP-$OSARCH-$VERSION.deb $GH_USER/deb/$GH_APP/$VERSION pool/$POOL/$GH_APP/
+  # create the rpm package
   - docker pull fedora
-  # create the package in the docker
   - >
     docker run -v $PWD:/mnt/travis fedora /bin/sh -c
     "cd /mnt/travis && (curl -s -L https://bintray.com/mh-cbon/rpm/rpm > /etc/yum.repos.d/w.repo) && dnf install go-bin-rpm changelog rpm-build -y --quiet && go-bin-rpm generate --file rpm.json -a $OSARCH --version $VERSION -o $GH_APP-$OSARCH-$VERSION.rpm"
@@ -83,7 +82,9 @@ before_deploy:
   - cp $GH_APP-$OSARCH-$VERSION.rpm $GH_APP-$OKARCH.rpm
   # upload to bintray
   - ./jfrog bt pc --key=$BTKEY --user=$GH_USER --licenses=MIT --vcs-url=https://github.com/$GH_USER/rpm $GH_USER/rpm/$GH_APP || echo "package already exists"
-  - ./jfrog bt upload --override=true --key $BTKEY --publish=true --deb=unstable/main/$OSARCH $GH_APP-$OSARCH-$VERSION.rpm $GH_USER/rpm/$GH_APP/$VERSION pool/g/$GH_APP/
+  - ./jfrog bt upload --override=true --key $BTKEY --publish=true $GH_APP-$OSARCH-$VERSION.rpm $GH_USER/rpm/$GH_APP/$VERSION pool/$POOL/$GH_APP/
+  # generate the repo metadata
+  - curl -X POST -u ${GH_USER}:${BTKEY} https://api.bintray.com/calc_metadata/${GH_USER}/rpm
 
 deploy:
   provider: releases
